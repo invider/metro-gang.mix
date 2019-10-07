@@ -1,20 +1,11 @@
-> status panel
-> back to metro mechanics
-> metro map
-> moving trains
-> hop-in and hop-out (move between stations)
-> stations -> street transition
-> basic fighting bot
 > stations moving bot
 > bot attitude (fight, run, pay out money, join the gang)
 > kick out of the street mechanics
 > bro's dialogs
 > catch control from AI
 > recapture of idle player by AI
-> time limit for street action
 > neutrals
 > riot police
-> station capture
 > passive income on captured stations
 > skyline
 > close-up buildings
@@ -30,6 +21,15 @@
 ? bro's get up animation
 ? bro's knocked down animation
 ----------------------------------
+V status panel
+V back to metro mechanics
+V metro map
+V moving trains
+V hop-in and hop-out (move between stations)
+V stations -> street transition
+V basic fighting bot
+V time limit for street action
+V station capture
 V money collection
 V join the gang mechanics
 V create package
