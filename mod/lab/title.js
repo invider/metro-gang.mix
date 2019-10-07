@@ -19,7 +19,7 @@ function draw() {
 
         fill(color)
         font(env.style.logoSize*env.scale + 'px boo-city')
-        text(msg, rx(.5), ry(.5))
+        text(msg, rx(.5), ry(.35))
     }
 }
 

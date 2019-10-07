@@ -13,6 +13,10 @@ function finish(e) {
         // transfer control!
         log('gang ' + gang.name + ' captured the station!')
 
+        const gangColor = winner.gang.color()
+        lab.title.show('gang ' + gang.id
+            + ' captured ' + e.station.name, 3, gangColor)
+
         station.gang = winner.gang
         station.mobs = RND(1, 4)
 

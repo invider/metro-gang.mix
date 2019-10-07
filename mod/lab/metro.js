@@ -39,12 +39,16 @@ function buildLines() {
     })
 }
 
+function getStation(l, s) {
+    return lines[l].seg[s]
+}
+
 function createTrains() {
     const l = lines[0]
-    trains.push(new dna.Train(0, l.seg[0], l.seg[1], lab.gang[0]))
-    trains.push(new dna.Train(0, l.seg[3], l.seg[4], lab.gang[1]))
-    trains.push(new dna.Train(0, l.seg[6], l.seg[5], lab.gang[2]))
-    trains.push(new dna.Train(0, l.seg[10], l.seg[9], lab.gang[3]))
+    trains.push(new dna.Train(0, l.seg[0], l.seg[1], lab.gang[1]))
+    trains.push(new dna.Train(0, l.seg[10], l.seg[9], lab.gang[2]))
+    trains.push(new dna.Train(0, l.seg[6], l.seg[5], lab.gang[3]))
+    trains.push(new dna.Train(0, l.seg[3], l.seg[4], lab.gang[4]))
 }
 
 function runTraffic() {
@@ -52,13 +56,26 @@ function runTraffic() {
     buildLines()
     createTrains()
 
-    /*
-    // capture some stations
-    lines[0].stations[4].gang = lab.gang[2]
-    lines[0].stations[4].mobs = 10
-    lines[0].stations[5].gang = lab.gang[4]
-    lines[0].stations[5].mobs = 4
-    */
+    // populate bad hoods
+    // hard-code-capture some stations
+    lines[0].stations[1].gang = lab.gang[3]
+    lines[0].stations[1].mobs = 3
+    lines[0].stations[3].gang = lab.gang[3]
+    lines[0].stations[3].mobs = 2
+    lines[0].stations[8].gang = lab.gang[3]
+    lines[0].stations[8].mobs = 5
+
+    lines[0].stations[9].gang = lab.gang[4]
+    lines[0].stations[9].mobs = 15
+    lines[0].stations[10].gang = lab.gang[4]
+    lines[0].stations[10].mobs = 7
+    lines[0].stations[7].gang = lab.gang[4]
+    lines[0].stations[7].mobs = 5
+
+    lab.gang[3].mobs = 10
+    lab.gang[3].cash = 200
+    lab.gang[4].mobs = 15
+    lab.gang[4].cash = 400
 }
 
 function nextSegment(src, dest) {
@@ -118,8 +135,8 @@ function drawStations() {
             let gangColor
             if (s.gang) {
                 gangColor = s.gang.color()
-                if (s.gang.mobs > 0) {
-                    suffix = ' - ' + s.gang.mobs
+                if (s.mobs > 0) {
+                    suffix = ' - ' + s.mobs
                 }
             } else {
                 gangColor = env.style.gang[0]
