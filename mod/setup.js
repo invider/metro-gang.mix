@@ -32,22 +32,20 @@ function setup() {
         dir: 0,
     })
 
-    /*
-    lab.spawn('Bro', {
+    lab.street.spawn('Bro', {
         gang: 0,
         x: rx(.5),
         y: 0,
     })
-    lab.spawn('Bro', {
+    lab.street.spawn('Bro', {
         gang: 3,
         x: rx(.6),
         y: 0,
     })
-    lab.spawn('Bro', {
+    lab.street.spawn('Bro', {
         gang: 4,
         x: rx(.7),
         y: 0,
         dir: 0,
     })
-    */
 }

@@ -35,7 +35,6 @@ function Coin(st) {
 Coin.prototype.init = function() {
     this.w = res.coin.width * env.scale * env.style.coinSize
     this.h = res.coin.height * env.scale * env.style.coinSize
-    log('coin size: ' + this.w + 'x' + this.h)
 }
 
 Coin.prototype.getArea = function() {

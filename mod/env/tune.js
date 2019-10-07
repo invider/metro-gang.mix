@@ -7,7 +7,7 @@ const tune = {
     forceFeedback: 1.5,
     blockFeedback: 0.5,
     streetFence: 0.3, // base
-    broCorner: 0.3,   // area to recruit bro's
+    broCorner: 0.2,   // area to recruit bro's
     hitsToBro: 7,
     bro: {
         acceleration: 20,// in bases

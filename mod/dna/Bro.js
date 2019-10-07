@@ -401,7 +401,8 @@ Bro.prototype.hit = function(hit) {
             this.hitCount ++
             if (this.hitCount >= env.tune.hitsToBro
                     && this.cash === 0
-                    && this.x <= rx(env.tune.broCorner)) {
+                    && (this.x <= rx(env.tune.broCorner)
+                        || this.x >= rx(1-env.tune.broCorner))) {
                 this.gang = hit.bro.gang
             }
 
