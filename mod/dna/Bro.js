@@ -42,7 +42,7 @@ const area = [
     [11, -26, 7, 5, 0],
     [10, -21, 9, 9, 0],
     [10, -4, 9, 4, 0],
-    [19, -18, 4, 4, 1],
+    [12, -18, 12, 4, 1],
 ]
 
 const df = {
@@ -58,6 +58,7 @@ const df = {
     maxHits: 10,
     dashLock: 0,
     recharge: 0,
+    timer: 0,
 }
 
 function touch(s, t) {
@@ -147,6 +148,10 @@ Bro.prototype.setCycle = function(n) {
 }
 
 Bro.prototype.perform = function(action, dt) {
+
+    if ((this.state === DAMAGE || this.state === OUT)
+        && action !== IDLE) return false
+
     switch(action) {
     case RUN:
         if (this.state === DASH) return false
@@ -177,7 +182,10 @@ Bro.prototype.perform = function(action, dt) {
                 this.maxDashSpeed)
         }
 
-        if (this.state !== DASH) this.recharge = -1
+        if (this.state !== DASH) {
+            this.recharge = -1
+            this.timer = env.tune.bro.dashTimeout
+        }
         this.dashLock = env.tune.bro.dashLock
 
         break;
@@ -204,6 +212,12 @@ Bro.prototype.perform = function(action, dt) {
         }
 
         return true
+
+    case OUT:
+        if (this.state !== OUT) {
+            if (this.player) this.recharge = env.tune.bro.playerOutTime
+            else this.recharge = env.tune.bro.botOutTime
+        }
     }
 
     this.state = action
@@ -229,14 +243,19 @@ Bro.prototype.performance = function(dt) {
 
     if (this.dashLock && this.state !== DASH) this.dashLock -= dt
 
+    // timeout for dash
+    if (this.state === DASH && this.timer < 0) {
+        this.idle()
+    }
+
     if (this.state === PUNCH) {
         if (this.recharge < 0) this.recharge = env.tune.bro.punchRecharge
         else this.recharge -= dt
     } else {
         this.recharge -= dt
-        //if (this.state === DASH || this.state === JUMP) {
-        //}
     }
+
+    this.timer -= dt
 }
 
 
@@ -411,7 +430,8 @@ Bro.prototype.evo = function(dt) {
         + round(this.x) + 'x' + round(this.y)
         + ' - ' + round(this.dx) + 'x' + round(this.dy)
     */
-    //this.status = states[this.state]
+    this.status = states[this.state]
+        + ' ' + round(this.timer*100)/100
 
     // animage
     this.frame.time += dt
@@ -463,7 +483,9 @@ Bro.prototype.evo = function(dt) {
     this.y = limit(this.y, -height(), 0)
 
     // restore hits
-    this.hits = min(this.hits + this.heal*dt, this.maxHits)
+    if (this.state !== OUT || this.recharge < 0) {
+        this.hits = min(this.hits + this.heal*dt, this.maxHits)
+    }
 
     // control
     let c = this.bot.control
@@ -573,7 +595,8 @@ Bro.prototype.draw = function() {
 
     if (env.config.debug && this.status) {
         fill('#ffffff')
-        font('14px zekton')
+        font('24px zekton')
+        alignCenter()
         text(this.status, this.w/2, 0)
     }
     restore()

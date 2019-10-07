@@ -9,6 +9,7 @@ const tune = {
         acceleration: 20,// in bases
         maxSpeed: 5,     // in bases
         dashLock: 4,     // seconds to wait between dashes
+        dashTimeout: 1,
         dashThreshold: 5, // speed needed for dash
         dashAcceleration: 25,
         maxDashSpeed: 7,
@@ -22,5 +23,7 @@ const tune = {
         jumpRecharge: 0.1,
         hitForce: 0.01,     // force/hits rate
         hitBlock: 0.0025,   // force/hits in block
+        playerOutTime: 2,
+        botOutTime: 4,
     },
 }
