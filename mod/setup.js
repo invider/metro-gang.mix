@@ -1,3 +1,6 @@
+
+env.time = 0
+
 function adjust() {
     const sampleFrame = res.dude[1]
     env.scale = (rx(env.tune.base)/sampleFrame.width)

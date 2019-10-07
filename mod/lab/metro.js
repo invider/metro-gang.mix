@@ -174,3 +174,15 @@ function draw() {
     drawLogo()
     restore()
 }
+
+function hide() {
+    this.paused = true
+    this.hidden = true
+    env.state = 'street'
+}
+
+function show() {
+    this.paused = false
+    this.hidden = false
+    env.state = 'metro'
+}

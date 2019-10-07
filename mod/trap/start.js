@@ -2,15 +2,16 @@ function createGangs() {
     lab.gang = []
 
     lab.gang.push(new dna.Gang({ id: 0 }))
-    lab.gang.push(new dna.Gang({ id: 1 }))
-    lab.gang.push(new dna.Gang({ id: 2 }))
-    lab.gang.push(new dna.Gang({ id: 3 }))
-    lab.gang.push(new dna.Gang({ id: 4 }))
+    lab.gang.push(new dna.Gang({ id: 1, player: 1 }))
+    lab.gang.push(new dna.Gang({ id: 2, player: 2 }))
+    lab.gang.push(new dna.Gang({ id: 3, player: 3 }))
+    lab.gang.push(new dna.Gang({ id: 4, player: 4 }))
 }
 
 function start() {
     createGangs()
     lab.metro.runTraffic()
+    lab.metro.show()
 
     bros()
 }

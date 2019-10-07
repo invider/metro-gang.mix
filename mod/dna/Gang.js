@@ -17,3 +17,13 @@ Gang.prototype.color = function() {
 Gang.prototype.lowColor = function() {
     return env.style.gangLow[this.id]
 }
+
+Gang.prototype.control = function(df) {
+    if (this.player
+            && env.control.player[this.player]
+            && env.control.player[this.player].active) {
+        return env.control.player[this.player]
+    } else {
+        return df
+    }
+}

@@ -1,4 +1,5 @@
 const tune = {
+    roundTime: 45,
     cashUnit: 0.25,
     base: .08, // base=[bro width] relative to the screen width
     gravity: 18,
@@ -32,5 +33,6 @@ const tune = {
     },
     metro: {
         transitTime: 3,
+        hopOutThreshold: 0.8,
     },
 }
