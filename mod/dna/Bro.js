@@ -38,15 +38,17 @@ const HEAD = 0
 const BODY = 1
 const LEGS = 2
 const FIST = 3
+const PICK = 4
 const area = [
     [11, -26, 7, 5, 0],
     [10, -21, 9, 9, 0],
     [10, -4, 9, 4, 0],
     [12, -18, 12, 4, 1],
+    [8, -25, 7, 25, 0],
 ]
 
 const df = {
-    solid: true,
+    _hittable: true,
     x: 0,
     y: 0,
     dx: 0,
@@ -56,24 +58,12 @@ const df = {
     mass: 100,
     hits: 10,
     maxHits: 10,
+    hitCount: 0,
     dashLock: 0,
     recharge: 0,
     timer: 0,
+    cash: 2,
 }
-
-function touch(s, t) {
-    return (s[0] + s[2] >= t[0] && s[0] <= t[0] + t[2]
-          && s[1] + s[3] >= t[1] && s[1] <= t[1] + t[3]);
-}
-
-function sx(x) {
-    return x
-}
-
-function sy (y) {
-    return y + ctx.height * env.style.groundLevel
-}
-
 
 let bros = 0
 function Bro(st) {
@@ -147,6 +137,27 @@ Bro.prototype.setCycle = function(n) {
     this.frame.time = 0
 }
 
+function roundCash(v) {
+    if(v < 0) return 0
+    return floor(v*100)/100
+}
+
+Bro.prototype.cashIn = function(val) {
+    this.cash = roundCash(this.cash + val)
+}
+
+Bro.prototype.cashOut = function(val) {
+    this.cash = roundCash(this.cash - val)
+}
+
+Bro.prototype.throwOutCash = function() {
+    this.cashOut(env.tune.cashUnit)
+    this.__.spawn('Coin', {
+        x: this.x,
+        y: this.y,
+    })
+}
+
 Bro.prototype.perform = function(action, dt) {
 
     if ((this.state === DAMAGE || this.state === OUT)
@@ -215,8 +226,10 @@ Bro.prototype.perform = function(action, dt) {
 
     case OUT:
         if (this.state !== OUT) {
+            // getting into an out
             if (this.player) this.recharge = env.tune.bro.playerOutTime
             else this.recharge = env.tune.bro.botOutTime
+            this.hitCount = 0
         }
     }
 
@@ -276,7 +289,7 @@ Bro.prototype.isHitting = function(t) {
             punchSpeed = abs(this.dx) / env.base
         }
 
-        if (touch(fist, head)) {
+        if (lib.util.touch(fist, head)) {
             this.showBound(head, '#ffff40')
             return {
                 bro: this,
@@ -286,7 +299,7 @@ Bro.prototype.isHitting = function(t) {
                 force: this.mass * punchSpeed,
             }
         }
-        if (touch(fist, body)) {
+        if (lib.util.touch(fist, body)) {
             this.showBound(body, '#ffff40')
             return {
                 bro: this,
@@ -307,7 +320,7 @@ Bro.prototype.isHitting = function(t) {
         this.showBound(legs, '#ff4040')
 
         const punchSpeed = abs(this.dx) / env.base
-        if (touch(legs, head)) {
+        if (lib.util.touch(legs, head)) {
             this.showBound(head, '#ffff40')
             return {
                 bro: this,
@@ -317,7 +330,7 @@ Bro.prototype.isHitting = function(t) {
                 force: this.mass * punchSpeed
             }
         }
-        if (touch(legs, body)) {
+        if (lib.util.touch(legs, body)) {
             this.showBound(body, '#ffff40')
             return {
                 bro: this,
@@ -348,9 +361,9 @@ Bro.prototype.block = function(hit) {
         this.dx = -hit.force * env.tune.blockFeedback
     }
 
-    lab.spawn('Emitter', {
-        x: sx(hit.bro.getPoint(hit.type)[0]),
-        y: sy(hit.bro.getPoint(hit.type)[1]),
+    this.__.spawn('Emitter', {
+        x: hit.bro.getPoint(hit.type)[0],
+        y: hit.bro.getPoint(hit.type)[1],
         color: env.style.gang[this.gang],
         lifespan: 0.05,
         force: 200,
@@ -370,25 +383,42 @@ Bro.prototype.block = function(hit) {
 Bro.prototype.hit = function(hit) {
     if (this.state !== DAMAGE) {
         if (hit.force === 0) return
+        /*
         log(hit.bro.name + ' hitting ' + this.name
             + ' force: ' + round(hit.force))
+        */
 
         if (this.state === BLOCK && this.dir !== hit.bro.dir) {
             this.block(hit)
             return
         }
 
-
         this.hits = max(this.hits
             - hit.force * env.tune.bro.hitForce, 0)
         hit.bro.feedback(this, hit)
 
-        this.perform(DAMAGE, hit)
+        if (this.state === OUT) {
+            this.hitCount ++
+            if (this.hitCount >= env.tune.hitsToBro
+                    && this.cash === 0
+                    && this.x <= rx(env.tune.broCorner)) {
+                this.gang = hit.bro.gang
+            }
+
+            if (this.cash > 0) {
+                log(hit.bro.name + '->' + this.name
+                    + ": giv'me your money!")
+                this.throwOutCash()
+            }
+
+        } else {
+            this.perform(DAMAGE, hit)
+        }
 
         /*
-        lab.spawn('Emitter', {
-            x: sx(this.getPoint(hit.area)[0]),
-            y: sy(this.getPoint(hit.area)[1]),
+        this.__.spawn('Emitter', {
+            x: this.getPoint(hit.area)[0],
+            y: this.getPoint(hit.area)[1],
             color: env.style.gangLow[this.gang],
             lifespan: 0.05,
             force: 1000,
@@ -404,9 +434,9 @@ Bro.prototype.hit = function(hit) {
             }
         })
         */
-        lab.spawn('Emitter', {
-            x: sx(hit.bro.getPoint(hit.type)[0]),
-            y: sy(hit.bro.getPoint(hit.type)[1]),
+        this.__.spawn('Emitter', {
+            x: hit.bro.getPoint(hit.type)[0],
+            y: hit.bro.getPoint(hit.type)[1],
             color: env.style.gang[this.gang],
             lifespan: 0.05,
             force: 1000,
@@ -430,8 +460,7 @@ Bro.prototype.evo = function(dt) {
         + round(this.x) + 'x' + round(this.y)
         + ' - ' + round(this.dx) + 'x' + round(this.dy)
     */
-    this.status = states[this.state]
-        + ' ' + round(this.timer*100)/100
+    //this.status = states[this.state] + ' ' + round(this.timer*100)/100
 
     // animage
     this.frame.time += dt
@@ -464,9 +493,12 @@ Bro.prototype.evo = function(dt) {
         this.dy = this.dy + env.tune.gravity * env.unit * dt
         //this.y = min(this.y + GRAVITY * dt, 0)
     }
-    // friction
     if (this.y === 0) {
+        // friction
         this.dx = lib.util.lim(this.dx, env.tune.friction*env.base*dt, 0)
+    } else {
+        // air drag
+        this.dx = lib.util.lim(this.dx, env.tune.airDrag*env.base*dt, 0)
     }
 
     // bounds
@@ -530,8 +562,10 @@ Bro.prototype.evo = function(dt) {
             // select new goal
             this.bot.goal = RND(11)
             this.bot.timer = rnd(0.3, 2)
+            /*
             log(this.name + ' selected #'
                 + this.bot.goal + ' for ' + this.bot.timer)
+                */
         } else {
             this.bot.timer -= dt
             if (this.bot.timer < 0) {
@@ -564,7 +598,7 @@ Bro.prototype.evo = function(dt) {
 Bro.prototype.showBound = function(b, color) {
     if (env.config.bounds) {
         save()
-        translate(sx(0), sy(0))
+        translate(0, 0)
         stroke(color)
         lineWidth(1)
         rect(b[0], b[1], b[2], b[3])
@@ -574,8 +608,8 @@ Bro.prototype.showBound = function(b, color) {
 
 Bro.prototype.draw = function() {
     // screen coordinates
-    const x = sx(this.x) - this.w/2
-    const y = sy(this.y) - this.h 
+    const x = this.x - this.w/2
+    const y = this.y - this.h 
     const f = res.gang[this.gang][this.frame.cur]
     const s = this.scale
 
@@ -603,7 +637,6 @@ Bro.prototype.draw = function() {
 
     if (env.config.bounds) {
         save()
-        translate(sx(0), sy(0))
 
         // sprite area
         lineWidth(1)
@@ -627,12 +660,13 @@ Bro.prototype.draw = function() {
 
     // hits bar
     const h = min(this.hits/this.maxHits, 1)
-    const hy = height() - 10
+    const hy = lab.street.worldY(height() - 10 - 8*this.gang)
+    const hw = this.w * env.style.healthWidth
+    const hx = (x + this.w/2) - hw/2
+
     lineWidth(4)
-    //stroke('#802020')
     stroke(env.style.gangLow[this.gang])
-    line(x, hy, x+this.w, hy)
-    //stroke('#ff6060')
+    line(hx, hy, hx+hw, hy)
     stroke(env.style.gang[this.gang])
-    line(x, hy, x + this.w*h, hy)
+    line(hx, hy, hx+hw*h, hy)
 }

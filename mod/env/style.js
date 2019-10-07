@@ -1,7 +1,11 @@
 const style = {
     streetBackground: '#070312',
 
-    groundLevel: 0.85,
+    groundLevel: 0.3,
+
+    healthWidth: 0.5, // in bros
+
+    coinSize: 0.4,
 
     gang: [
         hsl(.2, 0.1, 0.7),

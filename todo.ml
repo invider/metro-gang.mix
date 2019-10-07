@@ -1,3 +1,5 @@
+> status panel
+> back to metro mechanics
 > metro map
 > moving trains
 > hop-in and hop-out (move between stations)
@@ -5,10 +7,6 @@
 > basic fighting bot
 > stations moving bot
 > bot attitude (fight, run, pay out money, join the gang)
-> status panel
-> money collection
-> join the gang mechanics
-> back to metro mechanics
 > kick out of the street mechanics
 > bro's dialogs
 > catch control from AI
@@ -32,6 +30,8 @@
 ? bro's get up animation
 ? bro's knocked down animation
 ----------------------------------
+V money collection
+V join the gang mechanics
 V create package
 V fun physics (mass, acceleration, velocity, forces)
 V fight mechanics (health, stamina etc)

@@ -1,10 +1,14 @@
 const tune = {
+    cashUnit: 0.25,
     base: .08, // base=[bro width] relative to the screen width
     gravity: 18,
     friction: 10,
+    airDrag: 5,
     forceFeedback: 1.5,
     blockFeedback: 0.5,
     streetFence: 0.3, // base
+    broCorner: 0.3,   // area to recruit bro's
+    hitsToBro: 7,
     bro: {
         acceleration: 20,// in bases
         maxSpeed: 5,     // in bases
