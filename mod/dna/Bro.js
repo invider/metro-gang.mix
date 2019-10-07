@@ -145,6 +145,7 @@ function roundCash(v) {
 
 Bro.prototype.cashIn = function(val) {
     this.cash = roundCash(this.cash + val)
+    sfx(res.sfx.pickup, 0.6)
 }
 
 Bro.prototype.cashOut = function(val) {
@@ -438,6 +439,7 @@ Bro.prototype.hit = function(hit) {
             }
         })
         */
+
         this.__.spawn('Emitter', {
             x: hit.bro.getPoint(hit.type)[0],
             y: hit.bro.getPoint(hit.type)[1],
@@ -455,6 +457,7 @@ Bro.prototype.hit = function(hit) {
                 rect(this.x, this.y, this.r, this.r)
             }
         })
+        sfx(res.sfx.hit3, 0.6)
     }
 }
 
