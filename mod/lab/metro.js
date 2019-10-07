@@ -1,3 +1,4 @@
+const Z = 21
 const W = 100
 
 let style
@@ -27,22 +28,31 @@ function buildLines() {
             s.station = true
             lines[l].stations.push(s)
             s.sid = lines[l].stations.length - 1
+            s.mobs = 0
         }
     })
 }
 
 function createTrains() {
     const l = lines[0]
-    trains.push(new dna.Train(0, l.seg[0], l.seg[1]))
-    trains.push(new dna.Train(0, l.seg[3], l.seg[4]))
-    trains.push(new dna.Train(0, l.seg[6], l.seg[5]))
-    trains.push(new dna.Train(0, l.seg[10], l.seg[9]))
+    trains.push(new dna.Train(0, l.seg[0], l.seg[1], lab.gang[0]))
+    trains.push(new dna.Train(0, l.seg[3], l.seg[4], lab.gang[1]))
+    trains.push(new dna.Train(0, l.seg[6], l.seg[5], lab.gang[2]))
+    trains.push(new dna.Train(0, l.seg[10], l.seg[9], lab.gang[3]))
 }
 
-function init() {
+function runTraffic() {
     style = env.style.metro
     buildLines()
     createTrains()
+
+    /*
+    // capture some stations
+    lines[0].stations[4].gang = lab.gang[2]
+    lines[0].stations[4].mobs = 10
+    lines[0].stations[5].gang = lab.gang[4]
+    lines[0].stations[5].mobs = 4
+    */
 }
 
 function nextSegment(src, dest) {
@@ -97,9 +107,13 @@ function drawStations() {
             const x = rx(s.x)
             const y = ry(s.y)
 
+            let suffix = ''
             let gangColor
             if (s.gang) {
-                gangColor = env.style.gang[s.gang.id]
+                gangColor = s.gang.color()
+                if (s.gang.mobs > 0) {
+                    suffix = ' - ' + s.gang.mobs
+                }
             } else {
                 gangColor = env.style.gang[0]
             }
@@ -138,7 +152,7 @@ function drawStations() {
                 baseTop()
                 alignCenter()
             }
-            text(s.name, x+sx, y+sy)
+            text(s.name + suffix, x+sx, y+sy)
         })
     })
 }

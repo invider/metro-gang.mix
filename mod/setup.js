@@ -11,41 +11,10 @@ function setup() {
 
     const cam = lab.spawn('SlideCamera', {
         name: 'street',
-        Z: 101,
+        Z: 11,
         x: 0,
         y: 0,
     })
 
-
-    lab.street.spawn('Bro', {
-        player: 2,
-        gang: 2,
-        x: width() * .3,
-        y: 0,
-    })
-
-    lab.street.spawn('Bro', {
-        player: 1,
-        gang: 1,
-        x: rx(.5),
-        y: ry(.5),
-        dir: 0,
-    })
-
-    lab.street.spawn('Bro', {
-        gang: 0,
-        x: rx(.5),
-        y: 0,
-    })
-    lab.street.spawn('Bro', {
-        gang: 3,
-        x: rx(.6),
-        y: 0,
-    })
-    lab.street.spawn('Bro', {
-        gang: 4,
-        x: rx(.7),
-        y: 0,
-        dir: 0,
-    })
+    trap('start')
 }

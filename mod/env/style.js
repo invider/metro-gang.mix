@@ -2,6 +2,7 @@ const style = {
     logo: 'Metro Gang',
     logoSize: 16,
     logoColor: '#908010',
+    scoreSize: 10,
     streetBackground: '#070312',
 
     groundLevel: 0.3,

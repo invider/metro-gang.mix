@@ -407,8 +407,10 @@ Bro.prototype.hit = function(hit) {
             }
 
             if (this.cash > 0) {
+                /*
                 log(hit.bro.name + '->' + this.name
                     + ": giv'me your money!")
+                */
                 this.throwOutCash()
             }
 

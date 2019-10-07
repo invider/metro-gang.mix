@@ -37,7 +37,7 @@ Train.prototype.draw = function() {
     rotate(angle)
 
     let gangColor
-    if (this.gang) gangColor = env.style.gang[s.gang.id]
+    if (this.gang) gangColor = env.style.gang[this.gang.id]
     else gangColor = env.style.gang[0]
 
     const w = rx(env.style.metro.trainWidth)
