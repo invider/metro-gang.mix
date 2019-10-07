@@ -1,4 +1,7 @@
 const style = {
+    logo: 'Metro Gang',
+    logoSize: 16,
+    logoColor: '#908010',
     streetBackground: '#070312',
 
     groundLevel: 0.3,
@@ -25,5 +28,7 @@ const style = {
         lineWidth: 2,
         stationW: 1.5,
         stationR: 5,
+        trainWidth: 0.02,
+        trainHeight: 0.015,
     }
 }

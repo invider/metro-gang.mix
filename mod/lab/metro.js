@@ -3,33 +3,69 @@ const W = 100
 let style
 
 const lines = []
+const trains = []
 
-function init() {
-    style = env.style.metro
-
+function buildLines() {
     let l = 0
     lines[0] = {
-        color: hsl(.17, .9, .3),
+        color: hsl(.13, .9, .3),
         seg: [],
         stations: [],
     }
 
     // build metro lines
     env.seg.forEach(s => {
+        s.line = lines[l]
         // translate coords to 0..1 screen space
         s.x = s.x/W
         s.y = s.y/W
 
         lines[l].seg.push(s)
+        s.id = lines[l].seg.length - 1
+
         if (s.name != 'next') {
             s.station = true
             lines[l].stations.push(s)
+            s.sid = lines[l].stations.length - 1
         }
     })
 }
 
-function evo(dt) {
+function createTrains() {
+    const l = lines[0]
+    trains.push(new dna.Train(0, l.seg[0], l.seg[1]))
+    trains.push(new dna.Train(0, l.seg[3], l.seg[4]))
+    trains.push(new dna.Train(0, l.seg[6], l.seg[5]))
+    trains.push(new dna.Train(0, l.seg[10], l.seg[9]))
+}
 
+function init() {
+    style = env.style.metro
+    buildLines()
+    createTrains()
+}
+
+function nextSegment(src, dest) {
+    let next = 0
+    let ln = dest.line
+
+    if (src.id < dest.id) {
+        next = dest.id + 1
+        if (next >= ln.seg.length) next = dest.id - 1 // terminal
+    } else {
+        next = dest.id - 1
+        if (next < 0) next = dest.id + 1 // terminal
+    }
+
+    return ln.seg[next]
+}
+
+function evo(dt) {
+    trains.forEach(t => t.evo(dt))
+}
+
+function drawTrains() {
+    trains.forEach(t => t.draw())
 }
 
 function drawLines() {
@@ -107,9 +143,20 @@ function drawStations() {
     })
 }
 
+function drawLogo() {
+    baseMiddle()
+    alignCenter()
+
+    fill(env.style.logoColor)
+    font(env.style.logoSize*env.scale + 'px boo-city')
+    text(env.style.logo, rx(.5), ry(.25))
+}
+
 function draw() {
     save()
     drawLines()
     drawStations()
+    drawTrains()
+    drawLogo()
     restore()
 }

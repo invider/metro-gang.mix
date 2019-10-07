@@ -30,4 +30,7 @@ const tune = {
         playerOutTime: 2,
         botOutTime: 4,
     },
+    metro: {
+        transitTime: 3,
+    },
 }
