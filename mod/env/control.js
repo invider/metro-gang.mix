@@ -35,4 +35,21 @@ const control = {
         return actionFlag
     },
 
+    reset: function(p) {
+        const c = this.player[p]
+        if (!c) return false
+
+        Object.keys(c).forEach(k => {
+            // TODO - that screams for refactoring!
+            if (k === 'active' || k === 'lastTime') return
+            c[k] = false
+        })
+    },
+
+    resetAll: function() {
+        for (let i = 0; i < this.player.length; i++) {
+            this.reset(i)
+        }
+    },
+
 }

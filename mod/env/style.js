@@ -4,6 +4,7 @@ const style = {
     logoColor: '#908010',
     scoreSize: 10,
     streetBackground: '#070312',
+    timerSize: 14,
 
     selectedScoreScale: 1.2,
     selectedTrainScale: 1.6,

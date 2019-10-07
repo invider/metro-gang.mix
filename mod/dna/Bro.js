@@ -49,6 +49,7 @@ const area = [
 
 const df = {
     _hittable: true,
+    bro: true,
     x: 0,
     y: 0,
     dx: 0,
@@ -563,7 +564,12 @@ Bro.prototype.evo = function(dt) {
 
         if (!this.bot.goal) {
             // select new goal
-            this.bot.goal = RND(11)
+            if (this.gang) {
+                // gang member actions
+                this.bot.goal = RND(11)
+            } else {
+                this.bot.goal = RND(4)
+            }
             this.bot.timer = rnd(0.3, 2)
             /*
             log(this.name + ' selected #'

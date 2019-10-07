@@ -5,9 +5,16 @@ const df = {
     player: 0,
 }
 
+let instances = 0
 function Gang(st) {
+    this.name = 'gang' + instances++
     augment(this, df)
     augment(this, st)
+}
+
+Gang.prototype.cashIn = function(cash) {
+    if (!cash) return
+    this.cash += cash
 }
 
 Gang.prototype.color = function() {

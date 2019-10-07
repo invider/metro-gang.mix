@@ -3,8 +3,14 @@ const W = 100
 
 let style
 
+let block = 0
+
 const lines = []
 const trains = []
+
+function init() {
+    this.block = 0
+}
 
 function buildLines() {
     let l = 0
@@ -71,6 +77,7 @@ function nextSegment(src, dest) {
 }
 
 function evo(dt) {
+    this.block -= dt
     trains.forEach(t => t.evo(dt))
 }
 
@@ -185,4 +192,5 @@ function show() {
     this.paused = false
     this.hidden = false
     env.state = 'metro'
+    this.block = env.tune.metro.blockAfterFight
 }

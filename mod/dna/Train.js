@@ -26,6 +26,8 @@ Train.prototype.onArrival = function() {
 }
 
 Train.prototype.handle = function() {
+    if (lab.metro.block > 0) return
+
     let c = this.bot.control
     if (this.gang) {
         c = this.gang.control(c)
@@ -73,7 +75,9 @@ Train.prototype.draw = function() {
     let w = rx(env.style.metro.trainWidth)
     let h = ry(env.style.metro.trainHeight)
 
-    if (this.gang.player && env.control.any(this.gang.player)) {
+    if (lab.metro.block < 0
+            && this.gang.player
+            && env.control.any(this.gang.player)) {
         w *= env.style.selectedTrainScale
         h *= env.style.selectedTrainScale
     }
