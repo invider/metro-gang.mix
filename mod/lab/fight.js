@@ -40,7 +40,8 @@ function bros(gang, dir, n, cash) {
     }
 
     n--
-    lab.street.spawn('Bro', {
+    const p = lab.street.spawn('Bro', {
+        Z: RND(101, 199),
         gang: gang.id,
         player: gang.player,
         x: sx,
@@ -51,7 +52,8 @@ function bros(gang, dir, n, cash) {
 
     for (let i = 0; i < n; i++) {
         // other bots
-        lab.street.spawn('Bro', {
+        const b = lab.street.spawn('Bro', {
+            Z: RND(11, 99),
             gang: gang.id,
             x: sh + rnd(rx(.2)),
             y: 0,
@@ -59,6 +61,7 @@ function bros(gang, dir, n, cash) {
             cash: cash,
         })
     }
+
 }
 
 function begin(station, gang) {
@@ -68,11 +71,11 @@ function begin(station, gang) {
 
     markAllDead()
 
-    bros(gang, 1, gang.mobs, 2)
-
     if (!station.gang) {
         bros(lab.gang[0], 0, RND(1,4), 4)
     } else {
         bros(station.gang, 0, station.mobs, 2)
     }
+
+    bros(gang, 1, gang.mobs, 2)
 }

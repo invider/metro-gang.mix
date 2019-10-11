@@ -61,6 +61,15 @@ Train.prototype.draw = function() {
 
     const angle = atan(dy/dx)
 
+    let w = rx(env.style.metro.trainWidth)
+    let h = ry(env.style.metro.trainHeight)
+    if (lab.metro.block < 0
+            && this.gang.player
+            && env.control.any(this.gang.player)) {
+        w *= env.style.selectedTrainScale
+        h *= env.style.selectedTrainScale
+    }
+
     const x = rx(s.x + (d.x-s.x) * this.transit)
     const y = ry(s.y + (d.y-s.y) * this.transit)
 
@@ -72,18 +81,8 @@ Train.prototype.draw = function() {
     if (this.gang) gangColor = env.style.gang[this.gang.id]
     else gangColor = env.style.gang[0]
 
-    let w = rx(env.style.metro.trainWidth)
-    let h = ry(env.style.metro.trainHeight)
-
-    if (lab.metro.block < 0
-            && this.gang.player
-            && env.control.any(this.gang.player)) {
-        w *= env.style.selectedTrainScale
-        h *= env.style.selectedTrainScale
-    }
-
     fill(gangColor)
-    rect(-w/2, -w/2, w, h)
+    rect(-w/2, -h/2, w, h)
 
     /*
     fill(gangColor)

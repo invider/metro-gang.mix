@@ -33,14 +33,20 @@ function mapColor(img, s, t) {
 
 function remapSprites() {
     res.gang = []
+    res.player = []
 
     for (let gang = 0; gang < env.style.gang.length; gang++) {
         const color = lib.util.rgbComponents(env.style.gang[gang])
         res.gang[gang] = []
+        res.player[gang] = []
 
         for (let i = 0; i < res.dude.length; i++) {
             const img = this.mapColor(res.dude[i], [255, 0, 0], color)
             res.gang[gang][i] = img
+        }
+        for (let i = 0; i < res.hero.length; i++) {
+            const img = this.mapColor(res.hero[i], [255, 0, 0], color)
+            res.player[gang][i] = img
         }
     }
 }

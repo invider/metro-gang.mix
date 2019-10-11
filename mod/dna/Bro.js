@@ -622,8 +622,10 @@ Bro.prototype.draw = function() {
     // screen coordinates
     const x = this.x - this.w/2
     const y = this.y - this.h 
-    const f = res.gang[this.gang][this.frame.cur]
     const s = this.scale
+    let f
+    if (this.player) f = res.player[this.gang][this.frame.cur]
+    else f = res.gang[this.gang][this.frame.cur]
 
     save()
     translate(x, y)

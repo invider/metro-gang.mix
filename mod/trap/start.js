@@ -8,15 +8,7 @@ function createGangs() {
     lab.gang.push(new dna.Gang({ id: 4, player: 4 }))
 }
 
-function start() {
-    createGangs()
-    lab.metro.runTraffic()
-    lab.metro.show()
-
-    bros()
-}
-
-function bros() {
+function demoBrawl() {
     lab.street.spawn('Bro', {
         //player: 1,
         gang: 1,
@@ -49,3 +41,12 @@ function bros() {
         y: 0,
     })
 }
+
+function start() {
+    createGangs()
+    lab.metro.runTraffic()
+    lab.metro.show()
+
+    demoBrawl()
+}
+
