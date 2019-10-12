@@ -14,5 +14,8 @@ function keyUp(e) {
     case 'ArrowDown': env.control.stop(2, 'block'); break;
     case 'ShiftRight': env.control.stop(2, 'kick'); break;
     case 'Enter': env.control.stop(2, 'punch'); break;
+
+    case 'F7': case 'Digit7': lab.debug.cast.stopScreencast(); break;
+    case 'F6': case 'Digit6': lab.debug.cast.stopGif(); break;
     }
 }

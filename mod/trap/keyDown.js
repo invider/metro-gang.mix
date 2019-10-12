@@ -1,3 +1,5 @@
+let shots = 0
+
 function keyDown(e) {
     if (e.repeat) return
 
@@ -16,5 +18,15 @@ function keyDown(e) {
     case 'ArrowDown': env.control.move(2, 'block'); break;
     case 'ShiftRight': env.control.move(2, 'kick'); break;
     case 'Enter': env.control.move(2, 'punch'); break;
+
+
+    case 'F8': case 'Digit8':
+            lib.img.screenshot('metro-gang' + (++shots));
+            break;
+
+    case 'F7': case 'Digit7': lab.debug.cast.startScreencast(); break;
+    case 'F6': case 'Digit6': lab.debug.cast.startGif(); break;
     }
+
+    lab.debug.cheat.key(e.key)
 }
