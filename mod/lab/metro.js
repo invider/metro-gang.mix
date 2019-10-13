@@ -45,10 +45,12 @@ function getStation(l, s) {
 
 function createTrains() {
     const l = lines[0]
-    trains.push(new dna.Train(0, l.seg[0], l.seg[1], lab.gang[1]))
+    trains.push(new dna.Train(0, l.seg[0], l.seg[1]))
+    /*
     trains.push(new dna.Train(0, l.seg[10], l.seg[9], lab.gang[2]))
     trains.push(new dna.Train(0, l.seg[6], l.seg[5], lab.gang[3]))
     trains.push(new dna.Train(0, l.seg[3], l.seg[4], lab.gang[4]))
+    */
 }
 
 function runTraffic() {

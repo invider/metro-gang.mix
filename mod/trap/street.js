@@ -1,8 +1,8 @@
 function street(e) {
-    log('gang #' + e.gang.id + ' hopping out at ' + e.station.name)
+    log('hopping out at ' + e.station.name)
 
     lab.metro.hide()
-    lab.fight.begin(e.station, e.gang)
+    lab.fight.begin(e.station, e.queue)
 
     // show station name
     let gangColor

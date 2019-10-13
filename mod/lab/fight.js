@@ -81,9 +81,8 @@ function bros(gang, dir, n, cash) {
 
 }
 
-function begin(station, gang) {
+function begin(station, queue) {
     this.station = station
-    this.gang = gang
     this.timer = env.tune.roundTime
 
     markAllDead()
@@ -94,5 +93,8 @@ function begin(station, gang) {
         bros(station.gang, 0, station.mobs, 2)
     }
 
-    bros(gang, 1, gang.mobs, 2)
+    for (let i = 1; i < queue; i++) {
+        bros(i, 1, queue[i], 2)
+    }
+
 }

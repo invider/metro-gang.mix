@@ -32,7 +32,7 @@ const tune = {
         botOutTime: 4,
     },
     metro: {
-        transitTime: 3,
+        transitTime: 5,
         hopOutThreshold: 0.9,
         blockAfterFight: .5,
     },

@@ -6,6 +6,7 @@ const style = {
     streetBackground: '#070312',
     timerSize: 14,
 
+    trainColor: hsl(.01, 0.1, 0.7),
     selectedScoreScale: 1.2,
     selectedTrainScale: 1.6,
 
