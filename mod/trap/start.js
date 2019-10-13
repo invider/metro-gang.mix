@@ -2,10 +2,30 @@ function createGangs() {
     lab.gang = []
 
     lab.gang.push(new dna.Gang({ id: 0 }))
-    lab.gang.push(new dna.Gang({ id: 1, player: 1 }))
-    lab.gang.push(new dna.Gang({ id: 2, player: 2 }))
-    lab.gang.push(new dna.Gang({ id: 3, player: 3 }))
-    lab.gang.push(new dna.Gang({ id: 4, player: 4 }))
+
+    lab.gang.push(new dna.Gang({
+        id: 1,
+        name: 'Reds',
+        player: 1,
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 2,
+        name: 'Lemons',
+        player: 2,
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 3,
+        name: 'Limes',
+        player: 3,
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 4,
+        name: 'Grapes',
+        player: 4,
+    }))
 }
 
 function demoBrawl() {

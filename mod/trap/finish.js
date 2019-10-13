@@ -11,10 +11,10 @@ function finish(e) {
 
     if (!station.gang || winner.gang.id !== station.gang.id) {
         // transfer control!
-        log('gang ' + gang.name + ' captured the station!')
+        log(gang.name + ' captured the station!')
 
         const gangColor = winner.gang.color()
-        lab.title.show('gang ' + gang.id
+        lab.title.show(gang.name
             + ' captured ' + e.station.name, 3, gangColor)
 
         station.gang = winner.gang

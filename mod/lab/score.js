@@ -16,7 +16,7 @@ function gangStat(g, x, y) {
 
     alignCenter()
     baseTop()
-    text('mobs: ' + g.mobs, x, y)
+    text(g.name + ': ' + g.mobs, x, y)
 
     y += th
     text('$' + g.cash, x, y)
