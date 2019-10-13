@@ -48,6 +48,7 @@ const area = [
 ]
 
 const df = {
+    Z: 100,
     _hittable: true,
     bro: true,
     x: 0,
@@ -570,6 +571,12 @@ Bro.prototype.evo = function(dt) {
             if (this.gang) {
                 // gang member actions
                 this.bot.goal = RND(11)
+
+                if (this.x < rx(.1) && this.dir === 0) {
+                    this.bot.goal = 2
+                } else if (this.x > rx(.9) && this.dir === 1) {
+                    this.bot.goal = 1
+                }
             } else {
                 this.bot.goal = RND(4)
             }
@@ -626,19 +633,30 @@ Bro.prototype.draw = function() {
     let f
     if (this.player) f = res.player[this.gang][this.frame.cur]
     else f = res.gang[this.gang][this.frame.cur]
+    const shaddow = res.shaddow[this.frame.cur]
 
     save()
     translate(x, y)
 
     blocky()
+
+    const z = limit(1 - (this.Z - 100)/100, 0, 1) * .5
+    const zShift = z * 20
+
     if (this.dir === 0) {
         save()
         translate(f.width*s + 2*s, 0)
         scale(-1, 1)
-        image(f, 0, 0, f.width*s, f.height*s)
+        image(f, 0, -zShift, f.width*s, f.height*s)
+        alpha(z)
+        image(shaddow, 0, -zShift, f.width*s, f.height*s)
         restore()
     } else {
-        image(f, 0, 0, f.width*s, f.height*s)
+        save()
+        image(f, 0, -zShift, f.width*s, f.height*s)
+        alpha(z)
+        image(shaddow, 0, -zShift, f.width*s, f.height*s)
+        restore()
     }
 
     if (env.config.debug && this.status) {

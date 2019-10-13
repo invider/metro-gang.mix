@@ -10,6 +10,7 @@ function createGangs() {
 
 function demoBrawl() {
     lab.street.spawn('Bro', {
+        Z: 100,
         //player: 1,
         gang: 1,
         x: rx(.5),
@@ -18,6 +19,7 @@ function demoBrawl() {
     })
 
     lab.street.spawn('Bro', {
+        Z: 199,
         //player: 2,
         gang: 2,
         x: width() * .3,
@@ -25,17 +27,20 @@ function demoBrawl() {
     })
 
     lab.street.spawn('Bro', {
+        Z: 130,
         gang: 3,
         x: rx(.6),
         y: 0,
     })
     lab.street.spawn('Bro', {
+        Z: 160,
         gang: 4,
         x: rx(.7),
         y: 0,
         dir: 0,
     })
     lab.street.spawn('Bro', {
+        Z: 180,
         gang: 0,
         x: rx(.5),
         y: 0,

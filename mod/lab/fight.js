@@ -20,12 +20,29 @@ function evo(dt) {
     this.timer -= dt
 
     if (this.timer < 0) {
-        markAllDead()
-        trap('finish', {
-            station: this.station,
-            gang: this.gang,
-        })
+        if (env.skip) {
+            this.timer = env.tune.roundTime
+        } else {
+            markAllDead()
+            trap('finish', {
+                station: this.station,
+                gang: this.gang,
+            })
+        }
     }
+}
+
+function bro(igang) {
+    if (!igang) igang = 0
+
+    const b = lab.street.spawn('Bro', {
+        Z: RND(100, 199),
+        gang: igang,
+        x: rnd(rx(.1), rx(.9)),
+        y: 0,
+        dir: RND(1),
+        cash: 2,
+    })
 }
 
 function bros(gang, dir, n, cash) {
@@ -41,7 +58,7 @@ function bros(gang, dir, n, cash) {
 
     n--
     const p = lab.street.spawn('Bro', {
-        Z: RND(101, 199),
+        Z: RND(200, 299),
         gang: gang.id,
         player: gang.player,
         x: sx,
@@ -53,7 +70,7 @@ function bros(gang, dir, n, cash) {
     for (let i = 0; i < n; i++) {
         // other bots
         const b = lab.street.spawn('Bro', {
-            Z: RND(11, 99),
+            Z: RND(100, 199),
             gang: gang.id,
             x: sh + rnd(rx(.2)),
             y: 0,

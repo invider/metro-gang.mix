@@ -31,6 +31,38 @@ function mapColor(img, s, t) {
     return fixedImage
 }
 
+function makeShaddow(img, s) {
+    if (!img) return
+
+    const canvas = document.createElement('canvas')
+    const c = canvas.getContext('2d')
+    canvas.width = img.width
+    canvas.height = img.height
+    c.drawImage(img, 0, 0)
+
+    const idata = c.getImageData(0, 0, img.width, img.height)
+    const d = idata.data
+
+    for (let i = 0; i < d.length; i += 4) {
+        if (d[i] === s[0] && d[i+1] === s[1] && d[i+2] === s[2]) {
+            // darken
+            d[i] = 0
+            d[i+1] = 0
+            d[i+2] = 0
+        } else {
+            // make transparent
+            d[i] = 0
+            d[i+1] = 0
+            d[i+2] = 0
+            d[i+3] = 0
+        }
+    }
+    c.putImageData(idata, 0, 0)
+    const fixedImage = new Image()
+    fixedImage.src = canvas.toDataURL()
+    return fixedImage
+}
+
 function remapSprites() {
     res.gang = []
     res.player = []
@@ -48,6 +80,12 @@ function remapSprites() {
             const img = this.mapColor(res.hero[i], [255, 0, 0], color)
             res.player[gang][i] = img
         }
+    }
+
+    res.shaddow = []
+    for (let i = 0; i < res.dude.length; i++) {
+        const img = this.makeShaddow(res.dude[i], [36, 58, 92])
+        res.shaddow[i] = img
     }
 }
 

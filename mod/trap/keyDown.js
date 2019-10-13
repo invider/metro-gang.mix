@@ -19,7 +19,19 @@ function keyDown(e) {
     case 'ShiftRight': env.control.move(2, 'kick'); break;
     case 'Enter': env.control.move(2, 'punch'); break;
 
+    case 'KeyP':
+            if (!env.lock) _.paused = !_.paused
+            break;
+    case 'KeyH':
+            if (!_.paused && !env.lock) _.paused = true
+            break;
 
+    case 'F4':
+            if (env.lock) _.paused = false
+            else _.paused = true
+            env.lock = !env.lock
+            break;
+            
     case 'F8': case 'Digit8':
             lib.img.screenshot('metro-gang' + (++shots));
             break;

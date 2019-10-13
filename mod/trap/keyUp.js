@@ -15,6 +15,7 @@ function keyUp(e) {
     case 'ShiftRight': env.control.stop(2, 'kick'); break;
     case 'Enter': env.control.stop(2, 'punch'); break;
 
+    case 'KeyH': if (!env.lock) _.paused = false; break;
     case 'F7': case 'Digit7': lab.debug.cast.stopScreencast(); break;
     case 'F6': case 'Digit6': lab.debug.cast.stopGif(); break;
     }
