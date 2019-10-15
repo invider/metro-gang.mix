@@ -1,4 +1,5 @@
 const tune = {
+    gangs: 4,
     roundTime: 30,
     cashUnit: 0.25,
     base: .08, // base=[bro width] relative to the screen width

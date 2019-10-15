@@ -12,9 +12,19 @@ function setup() {
     adjust()
     lib.util.remapSprites()
 
-    const cam = lab.spawn('SlideCamera', {
-        name: 'street',
+    lab.spawn('SlideCamera', {
+        name: 'train',
         Z: 11,
+        x: 0,
+        y: -ry(.3),
+        scale: 1.5,
+        x1: -rx(.22),
+        x2: rx(.22),
+    })
+
+    lab.spawn('SlideCamera', {
+        name: 'street',
+        Z: 12,
         x: 0,
         y: 0,
     })

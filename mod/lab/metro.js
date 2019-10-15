@@ -144,8 +144,13 @@ function drawStations() {
                 gangColor = env.style.gang[0]
             }
 
-            stroke(gangColor)
             const r = style.stationR * env.scale
+            //fill(gangColor)
+            //fill(.75, .1, .4)
+            //fill(color)
+            //circle(x, y, r)
+
+            stroke(gangColor)
             lineWidth(style.stationW * env.scale)
             circle(x, y, r)
 
@@ -204,12 +209,14 @@ function draw() {
 function hide() {
     this.paused = true
     this.hidden = true
+    lab.carriage.paused = true
     env.state = 'street'
 }
 
 function show() {
     this.paused = false
     this.hidden = false
+    lab.carriage.paused = false
     env.state = 'metro'
     this.block = env.tune.metro.blockAfterFight
 }

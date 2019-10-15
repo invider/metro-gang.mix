@@ -34,7 +34,7 @@ const style = {
         lineWidth: 2,
         stationW: 1.5,
         stationR: 5,
-        trainWidth: 0.02,
-        trainHeight: 0.015,
+        trainWidth: 0.04,
+        trainHeight: 0.02,
     }
 }

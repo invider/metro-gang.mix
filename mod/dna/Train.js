@@ -3,13 +3,9 @@ function Train(line, src, dest) {
     this.src = src
     this.dest = dest
     this.transit = 0
-    this.bot = {
-        control: {}
-    }
 }
 
 Train.prototype.onHopOut = function(q) {
-    console.dir(q)
     trap('street', {
         station: this.dest,
         queue: q,
@@ -74,7 +70,7 @@ Train.prototype.draw = function() {
     const angle = atan(dy/dx)
 
     let w = rx(env.style.metro.trainWidth)
-    let h = ry(env.style.metro.trainHeight)
+    let h = rx(env.style.metro.trainHeight)
 
     /*
     if (lab.metro.block < 0

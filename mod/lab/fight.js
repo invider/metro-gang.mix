@@ -6,6 +6,9 @@ function markAllDead() {
     lab.street._ls.forEach(e => {
         e.dead = true
     })
+    lab.train._ls.forEach(e => {
+        e.dead = true
+    })
 }
 
 function cleanUp() {
@@ -42,6 +45,7 @@ function bro(igang) {
         y: 0,
         dir: RND(1),
         cash: 2,
+        bot: new dna.bot.Walker(),
     })
 }
 
@@ -65,6 +69,7 @@ function bros(gang, dir, n, cash) {
         y: 0,
         dir: dir,
         cash: cash,
+        bot: new dna.bot.Walker(),
     })
 
     for (let i = 0; i < n; i++) {
@@ -76,6 +81,7 @@ function bros(gang, dir, n, cash) {
             y: 0,
             dir: dir,
             cash: cash,
+            bot: new dna.bot.Walker(),
         })
     }
 
@@ -85,16 +91,19 @@ function begin(station, queue) {
     this.station = station
     this.timer = env.tune.roundTime
 
+    // clear the scene
     markAllDead()
 
     if (!station.gang) {
+        // neutrals
         bros(lab.gang[0], 0, RND(1,4), 4)
     } else {
+        // station gang
         bros(station.gang, 0, station.mobs, 2)
     }
 
-    for (let i = 1; i < queue; i++) {
-        bros(i, 1, queue[i], 2)
+    // arrival gangs
+    for (let i = 1; i < queue.length; i++) {
+        bros(lab.gang[i], 1, queue[i], 2)
     }
-
 }

@@ -72,6 +72,6 @@ function start() {
     lab.metro.runTraffic()
     lab.metro.show()
 
-    demoBrawl()
+    //demoBrawl()
 }
 

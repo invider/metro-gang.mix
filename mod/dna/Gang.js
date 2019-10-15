@@ -5,9 +5,7 @@ const df = {
     player: 0,
 }
 
-let instances = 0
 function Gang(st) {
-    this.name = 'gang' + instances++
     augment(this, df)
     augment(this, st)
 }
@@ -33,4 +31,12 @@ Gang.prototype.control = function(df) {
     } else {
         return df
     }
+}
+
+Gang.prototype.numberOnStreet = function() {
+    let count = 0
+    lab.street._ls.forEach(e => {
+        if (!e.dead && e.gang === this.id) count++
+    })
+    return count
 }

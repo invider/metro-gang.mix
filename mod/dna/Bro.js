@@ -9,7 +9,10 @@ const JUMP = 5
 const DAMAGE = 6
 const OUT = 7
 const BREAK = 8
+const EXIT = 9
+const NOPE = 10
 
+// states debug mapping
 const states = [
     'idle',
     'run',
@@ -20,11 +23,13 @@ const states = [
     'damage',
     'out',
     'break',
+    'exit',
+    'nope',
 ]
 
 const cycles = [
-    [1, 4, 0.2],    // idle
-    [5, 12, 0.1],   // run
+    [1,  4,  0.2],  // idle
+    [5,  12, 0.1],  // run
     [19, 19, -1],   // block
     [15, 18, 0.1],  // punch
     [14, 14, -1],   // dash
@@ -32,6 +37,8 @@ const cycles = [
     [24, 24, -1],   // damage
     [20, 23, 0.25], // out
     [12, 12, -1],   // break
+    [25, 28, 0.2],  // exit
+    [1,  4,  0.2],  // nope
 ]
 
 const HEAD = 0
@@ -51,6 +58,7 @@ const df = {
     Z: 100,
     _hittable: true,
     bro: true,
+    bounded: true,
     x: 0,
     y: 0,
     dx: 0,
@@ -70,12 +78,18 @@ const df = {
 let bros = 0
 function Bro(st) {
     this.name = 'bro' + ++bros
+    this.frame = {}
+    this.heal = env.tune.bro.healRate
+
     augment(this, df)
     augment(this, st)
-    this.heal = env.tune.bro.healRate
-    this.frame = {}
-    this.bot = {
-        control: {}
+
+    if (this.bot) this.bot.init(this)
+    else {
+        this.bot = {
+            control: {},
+            evo: function() {},
+        }
     }
 }
 
@@ -470,7 +484,7 @@ Bro.prototype.evo = function(dt) {
     */
     //this.status = states[this.state] + ' ' + round(this.timer*100)/100
 
-    // animage
+    // animate
     this.frame.time += dt
     if (this.frame.delay > 0 && this.frame.time >= this.frame.delay) {
         this.frame.time = 0
@@ -510,17 +524,19 @@ Bro.prototype.evo = function(dt) {
     }
 
     // bounds
-    if (this.x < env.tune.streetFence * env.base) {
-        // left edge
-        this.x = env.tune.streetFence * env.base
-        this.dx = 0
+    if (this.bounded) {
+        if (this.x < this.__.x1) {
+            // left edge
+            this.x = this.__.x1
+            this.dx = 0
 
-    } else if (this.x > width() - env.tune.streetFence * env.base) {
-        // right edge
-        this.x = width() - env.tune.streetFence * env.base
-        this.dx = 0
+        } else if (this.x > this.__.x2){
+            // right edge
+            this.x = this.__.x2 
+            this.dx = 0
+        }
+        this.y = limit(this.y, -height(), 0)
     }
-    this.y = limit(this.y, -height(), 0)
 
     // restore hits
     if (this.state !== OUT || this.recharge < 0) {
@@ -528,6 +544,8 @@ Bro.prototype.evo = function(dt) {
     }
 
     // control
+    if (!this.player) this.bot.evo(dt)
+
     let c = this.bot.control
     if (this.player) c = env.control.player[this.player] || {}
 
@@ -561,6 +579,7 @@ Bro.prototype.evo = function(dt) {
         }
     } 
 
+    /*
     if (!this.player) {
         // TODO bot logic
         // figure out closest targets
@@ -581,10 +600,8 @@ Bro.prototype.evo = function(dt) {
                 this.bot.goal = RND(4)
             }
             this.bot.timer = rnd(0.3, 2)
-            /*
-            log(this.name + ' selected #'
-                + this.bot.goal + ' for ' + this.bot.timer)
-                */
+            //log(this.name + ' selected #'
+            //    + this.bot.goal + ' for ' + this.bot.timer)
         } else {
             this.bot.timer -= dt
             if (this.bot.timer < 0) {
@@ -612,6 +629,7 @@ Bro.prototype.evo = function(dt) {
             }
         }
     }
+    */
 }
 
 Bro.prototype.showBound = function(b, color) {
