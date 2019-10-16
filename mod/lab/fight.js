@@ -12,9 +12,14 @@ function markAllDead() {
 }
 
 function cleanUp() {
-    lab.street._ls.forEach(e => {
-        if (e.dead) kill(e)
-    })
+    let target
+    let i = 0
+
+    while(!target && i < lab.street._ls.length) {
+        const e = lab.street._ls[i++]
+        if (e.dead) target = e
+    }
+    if (target) kill(target)
 }
 
 function evo(dt) {

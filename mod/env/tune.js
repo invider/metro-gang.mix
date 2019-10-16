@@ -31,9 +31,10 @@ const tune = {
         hitBlock: 0.0025,   // force/hits in block
         playerOutTime: 2,
         botOutTime: 4,
+        takeInTime: 0.6,
     },
     metro: {
-        transitTime: 5,
+        transitTime: 10,
         hopOutThreshold: 0.9,
         blockAfterFight: .5,
     },

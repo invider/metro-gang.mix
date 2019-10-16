@@ -250,6 +250,11 @@ Bro.prototype.perform = function(action, dt) {
         }
     }
 
+    /*
+    if (this.state !== action) {
+        log(this.name + ' new state: ' + states[action])
+    }
+    */
     this.state = action
     this.setCycle(action)
     return true
