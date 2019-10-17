@@ -2,6 +2,7 @@ function finish(e) {
     const station = e.station
 
     log('fight is finished at ' + station.name)
+    console.dir(e.result)
 
     env.control.resetAll()
 

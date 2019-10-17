@@ -53,10 +53,7 @@ function countGang(gangId) {
 }
 
 function spawnInQueue(gangId) {
-    if (countGang(gangId) >= lab.gang[gangId].mobs) {
-        log('too many! skipping')
-        return
-    }
+    if (countGang(gangId) >= lab.gang[gangId].mobs) return
 
     const bro = lab.train.spawn('Bro', {
         Z: 100,
@@ -66,7 +63,6 @@ function spawnInQueue(gangId) {
         state: 9,
         bot: new dna.bot.Passenger(),
     })
-    log('new bro for #' + gangId)
     return bro
 }
 
@@ -157,7 +153,7 @@ function cleanUp() {
 function evo(dt) {
     cleanUp()
 
-    for (let i = 1; i < env.tune.gangs; i++) {
+    for (let i = 1; i <= env.tune.gangs; i++) {
         const c = env.control.player[i] || {}
 
         if (c.punch || c.kick) {

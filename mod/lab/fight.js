@@ -22,25 +22,7 @@ function cleanUp() {
     if (target) kill(target)
 }
 
-function evo(dt) {
-    cleanUp()
-    if (env.state !== 'street') return
-    this.timer -= dt
-
-    if (this.timer < 0) {
-        if (env.skip) {
-            this.timer = env.tune.roundTime
-        } else {
-            markAllDead()
-            trap('finish', {
-                station: this.station,
-                gang: this.gang,
-            })
-        }
-    }
-}
-
-function bro(igang) {
+function spawnBro(igang) {
     if (!igang) igang = 0
 
     const b = lab.street.spawn('Bro', {
@@ -54,7 +36,7 @@ function bro(igang) {
     })
 }
 
-function bros(gang, dir, n, cash) {
+function spawnBros(gang, dir, n, cash) {
     if (!n) return
 
     let sh = 0
@@ -89,7 +71,59 @@ function bros(gang, dir, n, cash) {
             bot: new dna.bot.Walker(),
         })
     }
+}
 
+function stat() {
+    const gang = []
+
+    for (let i = 0; i <= env.tune.gangs; i++) {
+        gang[i] = {
+            id: i,
+            mobs: 0,
+            cash: 0,
+        }
+    }
+
+    lab.street._ls.forEach(b => {
+        if (b.bro && !b.dead) {
+            gang[b.gang].mobs++
+            gang[b.gang].cash += b.cash
+        }
+    })
+
+    gang.sort((a,b) => a.cash > b.cash? -1 : a.cash < b.cash? 1 : 0)
+
+    return {
+        station: this.station,
+        owner: this.station.gang,
+        mobs: this.station.mobs,
+        gang: gang,
+    }
+}
+
+function diff() {
+    const res = this.result
+    res.finish = this.stat()
+    res.diff = {
+        gang: [],
+        newOwner: -1,
+    }
+
+    for (let i = 0; i < res.start.gang.length; i++) {
+        res.diff[i] = {}
+        res.diff[i].mobs = res.start.gang[i].mobs
+            - res.finish.gang[i].mobs
+        res.diff[i].cash = res.start.gang[i].cash
+            - res.finish.gang[i].cash
+    }
+
+    const winner = res.finish.gang[0].id
+    if (res.start.owner !== winner) {
+        // new station owner!
+        this.station.gang = winner
+        res.finish.owner = winner
+        res.diff.newOwner = winner
+    }
 }
 
 function begin(station, queue) {
@@ -101,14 +135,38 @@ function begin(station, queue) {
 
     if (!station.gang) {
         // neutrals
-        bros(lab.gang[0], 0, RND(1,4), 4)
+        spawnBros(lab.gang[0], 0, RND(1,4), 4)
     } else {
         // station gang
-        bros(station.gang, 0, station.mobs, 2)
+        spawnBros(station.gang, 0, station.mobs, 2)
     }
 
     // arrival gangs
     for (let i = 1; i < queue.length; i++) {
-        bros(lab.gang[i], 1, queue[i], 2)
+        spawnBros(lab.gang[i], 1, queue[i], 2)
+    }
+
+    this.result = {
+        start: this.stat()
+    }
+}
+
+function evo(dt) {
+    cleanUp()
+    if (env.state !== 'street') return
+    this.timer -= dt
+
+    if (this.timer < 0) {
+        if (env.skip) {
+            this.timer = env.tune.roundTime
+        } else {
+            this.diff()
+            markAllDead()
+
+            trap('finish', {
+                station: this.station,
+                result: this.result,
+            })
+        }
     }
 }

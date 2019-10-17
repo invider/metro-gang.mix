@@ -1,4 +1,3 @@
-
 // @depends(dna/bot/Walker)
 const Walker = dna.bot.Walker
 
@@ -77,5 +76,3 @@ Passenger.prototype.evo = function(dt) {
         this.action = 1
     }
 }
-
-
