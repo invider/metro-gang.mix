@@ -68,11 +68,12 @@ function drawStat(st, diff, summary) {
 
     alignLeft()
     y += 1.3*step
-    for (let i = 0; i < st.gang.length; i++) {
-        if (st.gang[i].mobs > 0
-                || (diff && diff.gang[i].cash !== 0)) {
-            if (diff) gangStat(y, st.gang[i], diff.gang[i])
-            else gangStat(y, st.gang[i])
+    for (let i = 0; i < st.score.length; i++) {
+        const gid = st.score[i].id
+        if (st.score[i].mobs > 0
+                || (diff && diff.gang[gid].cash !== 0)) {
+            if (diff) gangStat(y, st.score[i], diff.gang[gid])
+            else gangStat(y, st.score[i])
             y += step
         }
     }

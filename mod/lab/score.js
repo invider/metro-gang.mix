@@ -77,9 +77,9 @@ function findWinner() {
 
 function showStreet() {
     const stat = lab.fight.calculateStat()
-    const winner = lab.gang[stat.gang[0].id]
-    const ahead = lib.util.normalizeCash(stat.gang[0].cash
-        - stat.gang[1].cash)
+    const winner = lab.gang[stat.score[0].id]
+    const ahead = lib.util.normalizeCash(stat.score[0].cash
+        - stat.score[1].cash)
 
     let th = env.style.timerSize * env.scale
     font(th + 'px ' + env.style.font)

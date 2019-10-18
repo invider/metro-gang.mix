@@ -85,6 +85,7 @@ function allWait() {
 
 function calculateStat() {
     const gang = []
+    const score = []
 
     for (let i = 0; i <= env.tune.gangs; i++) {
         gang[i] = {
@@ -92,6 +93,7 @@ function calculateStat() {
             mobs: 0,
             cash: 0,
         }
+        score[i] = gang[i]
     }
 
     lab.street._ls.forEach(b => {
@@ -101,7 +103,7 @@ function calculateStat() {
         }
     })
 
-    gang.sort((a,b) => {
+    score.sort((a,b) => {
         if (a.cash > b.cash) return -1
         else if (a.cash < b.cash) return 1
         else if (a.mobs > b.mobs) return -1
@@ -116,6 +118,7 @@ function calculateStat() {
         owner: this.station.gang,
         mobs: this.station.mobs,
         gang: gang,
+        score: score,
     }
 }
 
@@ -127,21 +130,22 @@ function calculateDiff() {
         newOwner: -1,
     }
 
-    for (let i = 0; i < res.start.gang.length; i++) {
-        res.diff.gang[i] = {}
-        const gang = lab.gang[res.finish.gang[i].id]
-        const mobs = res.finish.gang[i].mobs - res.start.gang[i].mobs
-        const cash = lib.util.normalizeCash(
-            res.finish.gang[i].cash - res.start.gang[i].cash)
+    for (let gid  = 0; gid < res.finish.gang.length; gid++) {
+        const gang = lab.gang[gid]
 
-        res.diff.gang[i].mobs = mobs
-        res.diff.gang[i].cash = cash
+        res.diff.gang[gid] = {}
+        const mobs = res.finish.gang[gid].mobs - res.start.gang[gid].mobs
+        const cash = lib.util.normalizeCash(
+            res.finish.gang[gid].cash - res.start.gang[gid].cash)
+
+        res.diff.gang[gid].mobs = mobs
+        res.diff.gang[gid].cash = cash
 
         gang.mobIn(mobs)
         gang.cashIn(cash)
     }
 
-    const wid = res.finish.gang[0].id
+    const wid = res.finish.score[0].id
     const winner = lab.gang[wid]
 
     if (res.start.owner !== winner) {
