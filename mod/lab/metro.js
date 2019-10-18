@@ -35,6 +35,7 @@ function buildLines() {
             lines[l].stations.push(s)
             s.sid = lines[l].stations.length - 1
             s.mobs = 0
+            s.gang = lab.gang[0]
         }
     })
 }

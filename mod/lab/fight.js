@@ -101,7 +101,7 @@ function stat() {
     }
 }
 
-function diff() {
+function calculateDiff() {
     const res = this.result
     res.finish = this.stat()
     res.diff = {
@@ -117,12 +117,14 @@ function diff() {
             - res.finish.gang[i].cash
     }
 
-    const winner = res.finish.gang[0].id
+    const wid = res.finish.gang[0].id
+    const winner = lab.gang[wid]
+
     if (res.start.owner !== winner) {
         // new station owner!
         this.station.gang = winner
-        res.finish.owner = winner
-        res.diff.newOwner = winner
+        res.finish.owner = winner.id
+        res.diff.newOwner = winner.id
     }
 }
 
@@ -149,6 +151,7 @@ function begin(station, queue) {
     this.result = {
         start: this.stat()
     }
+    lab.stat.show(this.result, env.tune.startStatTime, () => log('done with stat'))
 }
 
 function evo(dt) {
@@ -160,8 +163,7 @@ function evo(dt) {
         if (env.skip) {
             this.timer = env.tune.roundTime
         } else {
-            this.diff()
-            markAllDead()
+            this.calculateDiff()
 
             trap('finish', {
                 station: this.station,

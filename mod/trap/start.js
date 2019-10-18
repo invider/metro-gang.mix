@@ -1,7 +1,10 @@
 function createGangs() {
     lab.gang = []
 
-    lab.gang.push(new dna.Gang({ id: 0 }))
+    lab.gang.push(new dna.Gang({
+        id: 0,
+        name: 'Citizens',
+    }))
 
     lab.gang.push(new dna.Gang({
         id: 1,

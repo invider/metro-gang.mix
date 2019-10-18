@@ -1,8 +1,9 @@
-> fight results structure (number by gangs, money by gangs)
+V fight results structure (number by gangs, money by gangs)
+V stat screen
+> apply fight results
 > dynamic gang -> controller binding in activate order (1,2,3,4)
 > dynamic player -> bro binding on fights with proper Z ordering (put on top)
 > fight results panel (station -> gang, reds +2, grapes -2)
-> apply fight results
 > metro hints
 
 > stations moving bot
