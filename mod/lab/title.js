@@ -18,7 +18,7 @@ function draw() {
         alignCenter()
 
         fill(color)
-        font(env.style.logoSize*env.scale + 'px boo-city')
+        font(env.style.logoSize*env.scale + 'px ' + env.style.font)
         text(msg, rx(.5), ry(.35))
     }
 }

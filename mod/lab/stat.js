@@ -7,8 +7,6 @@ function show(stat, time, onFinish) {
     this.time = time
     this.onFinish = onFinish
     this.hidden = false
-
-    console.dir(stat)
 }
 
 function hide() {
@@ -23,7 +21,7 @@ function evo(dt) {
     if (this.time < 0) this.hide()
 }
 
-function drawStation(station, y) {
+function drawStation(y, station) {
     fill(station.gang.color())
     if (station.gang.id > 0 && station.mobs > 0) {
         text(station.name + ' - ' + station.mobs, rx(.5), y)
@@ -32,38 +30,49 @@ function drawStation(station, y) {
     }
 }
 
-function gangStat(gstat, y) {
+function gangStat(y, gstat, gdiff) {
     const gang = lab.gang[gstat.id]
 
     let th = env.style.scoreSize * env.scale
     fill(gang.color())
-    font(th + 'px coolville')
+    font(th + 'px ' + env.style.font)
 
-    text(lab.gang[gstat.id].name, rx(.3), y)
-    text(gstat.mobs, rx(.5), y)
-    text('$' + gstat.cash, rx(.7), y)
+    let mobs = '' + gstat.mobs
+    let cash = '$' + gstat.cash
+    if (gdiff) {
+        if (gdiff.mobs > 0) mobs += ' [+' + gdiff.mobs + ']'
+        else if (gdiff.mobs < 0) mobs += ' [' + gdiff.mobs + ']'
+        if (gdiff.cash > 0) cash += ' [+' + gdiff.cash + ']'
+        else if (gdiff.cash < 0) cash += ' [' + gdiff.cash + ']'
+    }
+    text(lab.gang[gstat.id].name, rx(.25), y)
+    text(mobs, rx(.5), y)
+    text(cash, rx(.65), y)
 }
 
 function drawStat(st, diff, summary) {
     let th = env.style.scoreSize * env.scale
-    font(th + 'px coolville')
+    font(th + 'px ' + env.style.font)
     alignCenter()
     baseMiddle()
 
     let y = ry(.2)
     let step = ry(.07)
 
-    drawStation(st.station, y)
+    drawStation(y, st.station)
 
     if (summary) {
         y += step
         text(summary, rx(.5), y)
     }
 
+    alignLeft()
     y += 1.3*step
     for (let i = 0; i < st.gang.length; i++) {
-        if (st.gang[i].mobs > 0) {
-            gangStat(st.gang[i], y)
+        if (st.gang[i].mobs > 0
+                || (diff && diff.gang[i].cash !== 0)) {
+            if (diff) gangStat(y, st.gang[i], diff.gang[i])
+            else gangStat(y, st.gang[i])
             y += step
         }
     }

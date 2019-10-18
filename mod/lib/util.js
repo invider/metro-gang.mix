@@ -107,3 +107,8 @@ function touch(s, t) {
     return (s[0] + s[2] >= t[0] && s[0] <= t[0] + t[2]
           && s[1] + s[3] >= t[1] && s[1] <= t[1] + t[3]);
 }
+
+function normalizeCash(cash) {
+    if (isNaN(cash)) return 0
+    return max(round((cash * 4))/4, 0)
+}

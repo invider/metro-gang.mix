@@ -49,8 +49,7 @@ Coin.prototype.touch = function(t) {
 
     this.showBound(this.getArea(), '#ffff00')
     if (lib.util.touch(this.getArea(), t.getArea(4))) {
-        t.cashIn(this.value)
-        kill(this)
+        if (t.cashIn(this.value)) kill(this)
     }
 }
 
@@ -71,6 +70,18 @@ Coin.prototype.evo = function (dt) {
     if (this.y === 0) {
         this.dx = lib.util.lim(this.dx, env.tune.friction*env.base*dt, 0)
     }
+
+    // bounds
+    if (this.x < this.__.x1) {
+        // left edge
+        this.x = this.__.x1
+        if (this.dx < 0) this.dx *= -1
+
+    } else if (this.x > this.__.x2) {
+        // right edge
+        this.x = this.__.x2 
+        if (this.dx > 0) this.dx *= -1
+    }
 }
 
 Coin.prototype.draw = function() {
@@ -80,4 +91,3 @@ Coin.prototype.draw = function() {
     image(res.coin, 0, 0, this.w, this.h)
     restore()
 }
-

@@ -1,4 +1,5 @@
 const style = {
+    font: 'coolville',
     logo: 'Metro Gang',
     logoSize: 12,
     logoColor: '#908010',

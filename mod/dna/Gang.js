@@ -1,7 +1,7 @@
 const df = {
     id: 0,
     cash: 0,
-    mobs: 5,
+    mobs: 1,
     player: 0,
 }
 
@@ -12,7 +12,13 @@ function Gang(st) {
 
 Gang.prototype.cashIn = function(cash) {
     if (!cash) return
-    this.cash += cash
+    log('#' + this.id + ' cash: ' + cash)
+    this.cash = max(this.cash + cash, 0)
+}
+
+Gang.prototype.mobIn = function(mobs) {
+    if (!mobs) return
+    this.mobs += max(mobs, 1)
 }
 
 Gang.prototype.color = function() {

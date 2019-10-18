@@ -36,7 +36,7 @@ function spawnBro(igang) {
     })
 }
 
-function spawnBros(gang, dir, n, cash) {
+function spawnBros(gang, dir, n, totalCash) {
     if (!n) return
 
     let sh = 0
@@ -46,6 +46,8 @@ function spawnBros(gang, dir, n, cash) {
         sh = rx(.6)
         sx = rx(.6)
     }
+
+    const cash = lib.util.normalizeCash(totalCash/n)
 
     n--
     const p = lab.street.spawn('Bro', {
@@ -73,7 +75,15 @@ function spawnBros(gang, dir, n, cash) {
     }
 }
 
-function stat() {
+function allWait() {
+    lab.street._ls.forEach(b => {
+        if (b.bro && !b.dead) {
+            b.setBot(new dna.bot.Idle())
+        }
+    })
+}
+
+function calculateStat() {
     const gang = []
 
     for (let i = 0; i <= env.tune.gangs; i++) {
@@ -87,11 +97,19 @@ function stat() {
     lab.street._ls.forEach(b => {
         if (b.bro && !b.dead) {
             gang[b.gang].mobs++
-            gang[b.gang].cash += b.cash
+            gang[b.gang].cash += lib.util.normalizeCash(b.cash)
         }
     })
 
-    gang.sort((a,b) => a.cash > b.cash? -1 : a.cash < b.cash? 1 : 0)
+    gang.sort((a,b) => {
+        if (a.cash > b.cash) return -1
+        else if (a.cash < b.cash) return 1
+        else if (a.mobs > b.mobs) return -1
+        else if (a.mobs < b.mobs) return 1
+        else if (a.id === this.station.gang.id) return -1
+        else if (b.id === this.station.gang.id) return 1
+        else return 0
+    })
 
     return {
         station: this.station,
@@ -103,18 +121,24 @@ function stat() {
 
 function calculateDiff() {
     const res = this.result
-    res.finish = this.stat()
+    res.finish = this.calculateStat()
     res.diff = {
         gang: [],
         newOwner: -1,
     }
 
     for (let i = 0; i < res.start.gang.length; i++) {
-        res.diff[i] = {}
-        res.diff[i].mobs = res.start.gang[i].mobs
-            - res.finish.gang[i].mobs
-        res.diff[i].cash = res.start.gang[i].cash
-            - res.finish.gang[i].cash
+        res.diff.gang[i] = {}
+        const gang = lab.gang[res.finish.gang[i].id]
+        const mobs = res.finish.gang[i].mobs - res.start.gang[i].mobs
+        const cash = lib.util.normalizeCash(
+            res.finish.gang[i].cash - res.start.gang[i].cash)
+
+        res.diff.gang[i].mobs = mobs
+        res.diff.gang[i].cash = cash
+
+        gang.mobIn(mobs)
+        gang.cashIn(cash)
     }
 
     const wid = res.finish.gang[0].id
@@ -135,23 +159,25 @@ function begin(station, queue) {
     // clear the scene
     markAllDead()
 
-    if (!station.gang) {
-        // neutrals
-        spawnBros(lab.gang[0], 0, RND(1,4), 4)
+    if (!station.gang || station.gang.id === 0) {
+        // citizens 
+        spawnBros(lab.gang[0], 0, RND(1,4), RND(1, 8))
     } else {
         // station gang
-        spawnBros(station.gang, 0, station.mobs, 2)
+        spawnBros(station.gang, 0, station.mobs, RND(1, 8))
+
+        spawnBros(lab.gang[0], 0, RND(0,4), RND(1, 4))
     }
 
     // arrival gangs
     for (let i = 1; i < queue.length; i++) {
-        spawnBros(lab.gang[i], 1, queue[i], 2)
+        spawnBros(lab.gang[i], 1, queue[i].mobs, queue[i].cash)
     }
 
     this.result = {
-        start: this.stat()
+        start: this.calculateStat()
     }
-    lab.stat.show(this.result, env.tune.startStatTime, () => log('done with stat'))
+    lab.stat.show(this.result, env.tune.startStatTime)
 }
 
 function evo(dt) {
@@ -164,6 +190,7 @@ function evo(dt) {
             this.timer = env.tune.roundTime
         } else {
             this.calculateDiff()
+            this.allWait()
 
             trap('finish', {
                 station: this.station,

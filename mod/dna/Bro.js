@@ -28,7 +28,7 @@ const states = [
 ]
 
 const cycles = [
-    [1,  4,  0.2],  // idle
+    [1,  4,  0.15],  // idle
     [5,  12, 0.1],  // run
     [19, 19, -1],   // block
     [15, 18, 0.1],  // punch
@@ -37,8 +37,8 @@ const cycles = [
     [24, 24, -1],   // damage
     [20, 23, 0.25], // out
     [12, 12, -1],   // break
-    [25, 28, 0.2],  // exit
-    [1,  4,  0.2],  // nope
+    [25, 28, 0.15],  // exit
+    [1,  4,  0.15],  // nope
 ]
 
 const HEAD = 0
@@ -84,13 +84,18 @@ function Bro(st) {
     augment(this, df)
     augment(this, st)
 
-    if (this.bot) this.bot.init(this)
+    if (this.bot) this.setBot(this.bot)
     else {
         this.bot = {
             control: {},
             evo: function() {},
         }
     }
+}
+
+Bro.prototype.setBot = function(bot) {
+    this.bot = bot
+    this.bot.init(this)
 }
 
 Bro.prototype.tuneToScale = function(s) {
@@ -136,8 +141,6 @@ Bro.prototype.getPoint = function(n) {
     return [ a[0] + a[2]/2, a[1] + a[3]/2 ]
 }
 
-
-
 Bro.prototype.setCycle = function(n) {
     if (this.frame.cycle === n) return
     const c = cycles[n]
@@ -159,8 +162,11 @@ function roundCash(v) {
 }
 
 Bro.prototype.cashIn = function(val) {
+    if (this.state === OUT) return false
+
     this.cash = roundCash(this.cash + val)
     sfx(res.sfx.pickup, 0.6)
+    return true
 }
 
 Bro.prototype.cashOut = function(val) {

@@ -62,7 +62,7 @@ function runTraffic() {
     // populate bad hoods
     // hard-code-capture some stations
     lines[0].stations[1].gang = lab.gang[3]
-    lines[0].stations[1].mobs = 3
+    lines[0].stations[1].mobs = 1
     lines[0].stations[3].gang = lab.gang[3]
     lines[0].stations[3].mobs = 2
     lines[0].stations[8].gang = lab.gang[3]
@@ -75,10 +75,11 @@ function runTraffic() {
     lines[0].stations[7].gang = lab.gang[4]
     lines[0].stations[7].mobs = 5
 
-    lab.gang[3].mobs = 10
-    lab.gang[3].cash = 200
-    lab.gang[4].mobs = 15
-    lab.gang[4].cash = 400
+    // give them some cash and mobs
+    //lab.gang[3].mobs = 10
+    //lab.gang[3].cash = 200
+    //lab.gang[4].mobs = 15
+    //lab.gang[4].cash = 400
 }
 
 function nextSegment(src, dest) {
@@ -156,7 +157,7 @@ function drawStations() {
             circle(x, y, r)
 
             fill(gangColor)
-            font(style.fontSize*env.scale + 'px boo-city')
+            font(style.fontSize*env.scale + 'px ' + env.style.font)
 
             const R = r * 1.5
             let sx = 0
@@ -194,7 +195,7 @@ function drawLogo() {
     alignCenter()
 
     fill(env.style.logoColor)
-    font(env.style.logoSize*env.scale + 'px boo-city')
+    font(env.style.logoSize*env.scale + 'px ' + env.style.font)
     text(env.style.logo, rx(.5), ry(.25))
 }
 

@@ -19,12 +19,17 @@ function reset() {
 }
 
 function exitQueue() {
-    const q = [0]
+    const q = []
     let total = 0
 
-    for (let i = 1; i < env.tune.gangs + 1; i++) {
+    for (let i = 0; i < env.tune.gangs + 1; i++) {
+        const g = lab.gang[i]
         const n = countDoers(i)
-        q[i] = n
+        const cash = ((g.cash/g.mobs) * n)
+        q[i] = {
+            mobs: n,
+            cash: lib.util.normalizeCash(cash),
+        }
         total += n
     }
 
@@ -99,7 +104,6 @@ function catchAllQuitters(gangId) {
         .forEach(b => {
             b.bot.followTo(b.bot.mark)
             catched++
-            log('[' + b.name + '] is back in business')
         })
     return catched
 }
@@ -112,7 +116,7 @@ function numberInQueue(gangId) {
     return bros
 }
 
-function queue(gangId) {
+function getInQueue(gangId) {
     // find a runner of this gang
     let bro = lookForQuitters(gangId)
     if (bro) {
@@ -169,7 +173,7 @@ function evo(dt) {
             if (keep[i] <= 0) {
                 keep[i] = env.tune.bro.takeInTime
                 //exit[i] ++ 
-                queue(i)
+                getInQueue(i)
             }
         } else {
             cancel(i)
