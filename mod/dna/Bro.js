@@ -181,6 +181,33 @@ Bro.prototype.throwOutCash = function() {
     })
 }
 
+Bro.prototype.closestEnemy = function() {
+    let enemy
+    const bro = this
+
+    if (this.dir === 0) {
+        lab.street._ls.forEach(b => {
+            if (b.bro && !b.dead && b.x < bro.x) {
+                if (!enemy) enemy = b
+                else if (b.x > enemy.x) enemy = b
+            }
+        })
+    } else {
+        lab.street._ls.forEach(b => {
+            if (b.bro && !b.dead && b.x > bro.x) {
+                if (!enemy) enemy = b
+                else if (b.x < enemy.x) enemy = b
+            }
+        })
+    }
+    return enemy
+}
+
+Bro.prototype.dist = function(b) {
+    if (!b || !b.bro || b.dead) return -1
+    return abs(this.x - b.x)
+}
+
 Bro.prototype.perform = function(action, dt) {
 
     if ((this.state === DAMAGE || this.state === OUT)
@@ -504,7 +531,19 @@ Bro.prototype.evo = function(dt) {
     }
 
     // vector movement
+    const enemy = this.closestEnemy()
+    const enemyDist = this.dist(enemy)
+
+    /*
+    if (this.bounded && this.y === 0 && enemy && enemy.y === 0
+            && enemyDist >= 0 && enemyDist <= this.w/3) {
+        // skip
+    } else {
     this.x += this.dx * dt
+    }
+    */
+    this.x += this.dx * dt
+
     this.y += this.dy * dt
     if (this.y > 0) {
         this.y = 0

@@ -32,7 +32,7 @@ function spawnBro(igang) {
         y: 0,
         dir: RND(1),
         cash: 2,
-        bot: new dna.bot.Walker(),
+        bot: new dna.bot.Fighter(),
     })
 }
 
@@ -58,7 +58,7 @@ function spawnBros(gang, dir, n, totalCash) {
         y: 0,
         dir: dir,
         cash: cash,
-        bot: new dna.bot.Walker(),
+        bot: new dna.bot.Fighter(),
     })
 
     for (let i = 0; i < n; i++) {
@@ -70,7 +70,7 @@ function spawnBros(gang, dir, n, totalCash) {
             y: 0,
             dir: dir,
             cash: cash,
-            bot: new dna.bot.Walker(),
+            bot: new dna.bot.Fighter(),
         })
     }
 }
@@ -170,7 +170,7 @@ function begin(station, queue) {
         // station gang
         spawnBros(station.gang, 0, station.mobs, RND(1, 8))
 
-        spawnBros(lab.gang[0], 0, RND(0,4), RND(1, 4))
+        spawnBros(lab.gang[0], 0, RND(0,2), RND(1, 2))
     }
 
     // arrival gangs

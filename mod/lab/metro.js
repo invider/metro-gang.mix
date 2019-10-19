@@ -62,7 +62,7 @@ function runTraffic() {
     // populate bad hoods
     // hard-code-capture some stations
     lines[0].stations[1].gang = lab.gang[3]
-    lines[0].stations[1].mobs = 1
+    lines[0].stations[1].mobs = 3
     lines[0].stations[3].gang = lab.gang[3]
     lines[0].stations[3].mobs = 2
     lines[0].stations[8].gang = lab.gang[3]
