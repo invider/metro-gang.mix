@@ -6,9 +6,10 @@ function finish(e) {
 
     env.control.resetAll()
 
-
     lab.stat.show(res, env.tune.finishStatTime, () => {
         lab.fight.markAllDead()
         lab.metro.show()
     })
+
+    env.game.checkGameOver()
 }

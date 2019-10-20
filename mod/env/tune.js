@@ -36,7 +36,11 @@ const tune = {
         takeInTime: 0.6,
     },
     metro: {
+        blink: .33,
+        doorsMoveTime: 0.7,
         transitTime: 10,
+        stationWaiting: 3,
+        exitWaiting: 1,
         hopOutThreshold: 0.9,
         blockAfterFight: .5,
     },

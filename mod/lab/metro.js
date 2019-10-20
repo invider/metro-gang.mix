@@ -1,4 +1,4 @@
-const Z = 21
+const Z = 23
 const W = 100
 
 let style
@@ -44,14 +44,15 @@ function getStation(l, s) {
     return lines[l].seg[s]
 }
 
+function forEachStation(fn) {
+    lines.forEach(l => l.stations.forEach(s => fn(s)))
+}
+
 function createTrains() {
     const l = lines[0]
-    trains.push(new dna.Train(0, l.seg[0], l.seg[1]))
-    /*
-    trains.push(new dna.Train(0, l.seg[10], l.seg[9], lab.gang[2]))
-    trains.push(new dna.Train(0, l.seg[6], l.seg[5], lab.gang[3]))
-    trains.push(new dna.Train(0, l.seg[3], l.seg[4], lab.gang[4]))
-    */
+    const train = new dna.Train(0, l.seg[0], l.seg[1])
+    trains.push(train)
+    train.attachSubway(lab.subway)
 }
 
 function runTraffic() {
@@ -196,14 +197,14 @@ function drawLogo() {
 
     fill(env.style.logoColor)
     font(env.style.logoSize*env.scale + 'px ' + env.style.font)
-    text(env.style.logo, rx(.5), ry(.25))
+    text(env.tagline, rx(.5), ry(.25))
 }
 
 function draw() {
     save()
     drawLines()
-    drawStations()
     drawTrains()
+    drawStations()
     drawLogo()
     restore()
 }
@@ -211,6 +212,7 @@ function draw() {
 function hide() {
     this.paused = true
     this.hidden = true
+    lab.subway.hidden = true
     lab.carriage.paused = true
     env.state = 'street'
 }
@@ -218,6 +220,7 @@ function hide() {
 function show() {
     this.paused = false
     this.hidden = false
+    lab.subway.hidden = false
     lab.carriage.paused = false
     env.state = 'metro'
     this.block = env.tune.metro.blockAfterFight

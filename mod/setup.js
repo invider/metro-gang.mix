@@ -14,7 +14,7 @@ function setup() {
 
     lab.spawn('SlideCamera', {
         name: 'train',
-        Z: 11,
+        Z: 22,
         x: 0,
         y: -ry(.3),
         scale: 1.5,
@@ -24,7 +24,7 @@ function setup() {
 
     lab.spawn('SlideCamera', {
         name: 'street',
-        Z: 12,
+        Z: 11,
         x: 0,
         y: 0,
     })

@@ -42,8 +42,8 @@ function gangStat(y, gstat, gdiff) {
     if (gdiff) {
         if (gdiff.mobs > 0) mobs += ' [+' + gdiff.mobs + ']'
         else if (gdiff.mobs < 0) mobs += ' [' + gdiff.mobs + ']'
-        if (gdiff.cash > 0) cash += ' [+' + gdiff.cash + ']'
-        else if (gdiff.cash < 0) cash += ' [' + gdiff.cash + ']'
+        if (gdiff.cash > 0) cash += ' [+$' + gdiff.cash + ']'
+        else if (gdiff.cash < 0) cash += ' [-$' + (-1 * gdiff.cash) + ']'
     }
     text(lab.gang[gstat.id].name, rx(.25), y)
     text(mobs, rx(.5), y)
@@ -83,7 +83,8 @@ function draw() {
     if (this.stat.finish) {
         let summary
         if (this.stat.diff.newOwner >= 0) {
-            summary = 'captured by ' + lab.gang[this.stat.diff.newOwner].name
+            const gangName = lab.gang[this.stat.diff.newOwner].name
+            summary = env.msg.capturedBy.replace('[gang]', gangName)
         }
         drawStat(this.stat.finish, this.stat.diff, summary)
     } else {

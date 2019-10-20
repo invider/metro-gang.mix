@@ -61,7 +61,7 @@ function spawnInQueue(gangId) {
     if (countGang(gangId) >= lab.gang[gangId].mobs) return
 
     const bro = lab.train.spawn('Bro', {
-        Z: 100,
+        Z: 200,
         gang: gangId,
         x: findEdge(),
         dir: 0,

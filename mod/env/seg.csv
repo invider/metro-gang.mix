@@ -1,14 +1,15 @@
 name,x,y,label,note
 
 # yellow line
-Union Station,  10, 25 ,2
-Nivki,          13, 35, 2
-Pigalle,        16, 45, 2
-Anvers,         19, 55, 2
-Cashwood,       22,65
-Mall,           40, 65
-Downtown,       50, 45, 6
-Hydropark,      60, 45
-Bridge,         70, 45, 5
-District B,     80, 35, 6
-Troya,          90, 25, 6
+Union Station,  5,  15 ,2
+Nivki,          9,  23, 2
+Pigalle,        13, 31, 2
+Anvers,         17, 39, 2
+Cashwood,       21, 47 
+Mall,           40, 47 
+Downtown,       50, 40, 6
+Hydropark,      60, 40 
+Bridge,         70, 40, 5
+DVRZ,           80, 30, 6
+Troya,          90, 20, 6
+

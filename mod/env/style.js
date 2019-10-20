@@ -1,13 +1,12 @@
 const style = {
     font: 'coolville',
-    logo: 'Metro Gang',
     logoSize: 12,
     logoColor: '#908010',
     scoreSize: 10,
     streetBackground: '#070312',
     timerSize: 14,
 
-    trainColor: hsl(.01, 0.1, 0.7),
+    trainColor: hsl(.52, 0.3, 0.7),
     selectedScoreScale: 1.2,
     selectedTrainScale: 1.6,
 
@@ -35,7 +34,16 @@ const style = {
         lineWidth: 2,
         stationW: 1.5,
         stationR: 5,
-        trainWidth: 0.03,
-        trainHeight: 0.015,
+        trainWidth: 0.02,
+        trainHeight: 0.01,
+
+        floorColor: hsl(.63, .15, .3),
+
+        lightsFQ: 4,
+        lightsSize: 1.5,
+        lightsTrail: 30,
+        lightsSpeed: .8,
+        lightsSpeedFactor: .2,
+        lightsColor: hsl(.2, .4, .5),
     }
 }

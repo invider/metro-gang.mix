@@ -71,6 +71,8 @@ function demoBrawl() {
 }
 
 function start() {
+    env.tagline = env.msg.title
+
     createGangs()
     lab.metro.runTraffic()
     lab.metro.show()

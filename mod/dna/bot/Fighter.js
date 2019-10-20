@@ -10,7 +10,6 @@ Fighter.prototype.evo = function(dt) {
         this.follow() 
         this.timeout -= dt
         if (this.timeout <= 0) this.action = 0
-        log('follow')
 
     } else {
 
