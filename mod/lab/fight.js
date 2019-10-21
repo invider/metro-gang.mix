@@ -135,7 +135,7 @@ function calculateDiff() {
 
         res.diff.gang[gid] = {}
         const mobs = res.finish.gang[gid].mobs - res.start.gang[gid].mobs
-        const cash = lib.util.normalizeCash(
+        const cash = lib.util.normalizeTransaction(
             res.finish.gang[gid].cash - res.start.gang[gid].cash)
 
         res.diff.gang[gid].mobs = mobs

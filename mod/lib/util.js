@@ -112,3 +112,8 @@ function normalizeCash(cash) {
     if (isNaN(cash)) return 0
     return max(round((cash * 4))/4, 0)
 }
+
+function normalizeTransaction(cash) {
+    if (isNaN(cash)) return 0
+    return round((cash * 4))/4
+}
