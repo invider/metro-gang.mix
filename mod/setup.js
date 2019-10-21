@@ -16,7 +16,7 @@ function setup() {
         name: 'train',
         Z: 22,
         x: 0,
-        y: -ry(.3),
+        y: -ry(env.style.metro.floorRY),
         scale: 1.5,
         x1: -rx(.22),
         x2: rx(.22),

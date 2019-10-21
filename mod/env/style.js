@@ -37,6 +37,8 @@ const style = {
         trainWidth: 0.02,
         trainHeight: 0.01,
 
+        baseRY: .9,
+        floorRY: .3,
         floorColor: hsl(.63, .15, .3),
 
         lightsFQ: 4,

@@ -27,6 +27,42 @@ function closeDoors() {
     this.state = CLOSING
 }
 
+function spawnLight() {
+    // new light
+    const drh = res.subwayDoorLeft.height * env.scale
+    const ph = env.style.metro.lightsSize * env.scale
+    const y = ry(baseY)-drh/2 - RND(drh/2)
+
+    // get the light object
+    let light
+    for (let i = 0; i < lights.length; i++) {
+        if (lights[i].dead) light = lights[i]
+    }
+
+    if (!light) {
+        light = {
+            evo: function(dt) {
+                this.x -= dt * speed
+                if (this.x < 0) this.dead = true
+            },
+            draw: function() {
+                const trail  = 1 + env.style.metro.lightsTrail * speedFactor
+                for (let i = 0; i < trail; i++) {
+                    alpha(1 - i/trail)
+                    fill(env.style.metro.lightsColor)
+                    rect(this.x + i*this.r, this.y, this.r, this.r)
+                }
+            },
+        }
+        lights.push(light)
+    }
+
+    light.dead = false
+    light.x = width()
+    light.y = y
+    light.r = env.style.metro.lightsSize * env.scale
+}
+
 function evoLights(dt) {
     const v1 = env.style.metro.lightsSpeedFactor
     const v2 = 1 - v1
@@ -36,38 +72,20 @@ function evoLights(dt) {
     else speedFactor = 1
     speed = rx(env.style.metro.lightsSpeed) * speedFactor
 
-    lights.forEach(l => l.evo(dt))
+    lights.forEach(l => {
+        if (!l.dead) l.evo(dt)
+    })
 
     if (rnd() < env.style.metro.lightsFQ*speedFactor*dt) {
-        // new light
-        const drh = res.subwayDoorLeft.height * env.scale
-        const ph = env.style.metro.lightsSize * env.scale
-        const y = ry(baseY)-drh/2 - RND(drh/2)
-
-        lights.push({
-            x: width(),
-            y: y,
-            r: env.style.metro.lightsSize * env.scale,
-
-            evo: function(dt) {
-                this.x -= dt * speed
-            },
-            draw: function() {
-                save()
-                const trail  = 1 + env.style.metro.lightsTrail * speedFactor
-                for (let i = 0; i < trail; i++) {
-                    alpha(1 - i/trail)
-                    fill(env.style.metro.lightsColor)
-                    rect(this.x + i*this.r, this.y, this.r, this.r)
-                }
-                restore()
-            },
-        })
+        this.spawnLight()
     }
 }
 
 function drawLights() {
-    lights.forEach(l => l.draw())
+    lights.forEach(l => {
+        if (!l.dead) l.draw()
+    })
+    alpha(1)
 }
 
 function evo(dt) {
