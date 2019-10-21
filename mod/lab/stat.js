@@ -1,3 +1,5 @@
+const Z = 1001
+
 function init() {
     this.hidden = true
 }

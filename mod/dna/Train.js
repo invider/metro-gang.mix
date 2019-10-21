@@ -1,7 +1,8 @@
 const TRANSIT = 1
-const EXITING = 2
-const WAITING = 3
-const CLOSING = 4
+const FADING = 2
+const EXITING = 3
+const WAITING = 4
+const CLOSING = 5
 
 function Train(line, src, dest) {
     this.line = line
@@ -34,12 +35,15 @@ Train.prototype.onArrival = function() {
 }
 
 Train.prototype.onExit = function() {
-    const q = lab.carriage.exitQueue()
-    if (q) {
-        // we have somebody for exit
-        this.onHopOut(q)
+    this.queue = lab.carriage.exitQueue()
+    if (this.queue) {
+        // we have somebody for exit - fade out first
+        this.state = FADING
+        lab.transition.transit(
+            env.tune.transitionTime, env.tune.fadeTime)
+    } else {
+        this.state = WAITING
     }
-    this.state = WAITING
 }
 
 Train.prototype.onDeparture = function() {
@@ -84,6 +88,12 @@ Train.prototype.evo = function(dt) {
 
     case EXITING:
             if (this.timer >= env.tune.metro.exitWaiting) this.onExit()
+
+    case FADING:
+            if (this.timer >= env.tune.metro.exitWaiting + env.tune.fadeTime) {
+                this.onHopOut(this.queue)
+                this.state = WAITING
+            }
 
     case WAITING:
             if (this.subway && this.timer >= (env.tune.metro.stationWaiting

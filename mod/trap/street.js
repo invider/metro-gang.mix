@@ -1,8 +1,9 @@
 function street(e) {
+
     log('hopping out at ' + e.station.name)
 
     lab.metro.hide()
-    lab.fight.begin(e.station, e.queue)
+    lab.fight.ready(e.station, e.queue)
 
     /*
     // show station name

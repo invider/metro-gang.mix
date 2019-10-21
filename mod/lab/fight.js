@@ -1,5 +1,12 @@
+const HIDDEN = 0
+const READY = 1
+const FIGHT = 2
+const RESULT = 3
+const FADE = 4
+
 function init() {
     this.timer = 0
+    this.state = HIDDEN
 }
 
 function markAllDead() {
@@ -32,7 +39,7 @@ function spawnBro(igang) {
         y: 0,
         dir: RND(1),
         cash: 2,
-        bot: new dna.bot.Fighter(),
+        bot: new dna.bot.Idle(),
     })
 }
 
@@ -49,17 +56,20 @@ function spawnBros(gang, dir, n, totalCash) {
 
     const cash = lib.util.normalizeCash(totalCash/n)
 
+    /*
     n--
     const p = lab.street.spawn('Bro', {
         Z: RND(200, 299),
         gang: gang.id,
-        player: gang.player,
+        //player: gang.player,
         x: sx,
         y: 0,
         dir: dir,
         cash: cash,
-        bot: new dna.bot.Fighter(),
+        //bot: new dna.bot.Fighter(),
+        bot: new dna.bot.Idle(),
     })
+    */
 
     for (let i = 0; i < n; i++) {
         // other bots
@@ -70,7 +80,7 @@ function spawnBros(gang, dir, n, totalCash) {
             y: 0,
             dir: dir,
             cash: cash,
-            bot: new dna.bot.Fighter(),
+            bot: new dna.bot.Idle(),
         })
     }
 }
@@ -79,6 +89,14 @@ function allWait() {
     lab.street._ls.forEach(b => {
         if (b.bro && !b.dead) {
             b.setBot(new dna.bot.Idle())
+        }
+    })
+}
+
+function allFight() {
+    lab.street._ls.forEach(b => {
+        if (b.bro && !b.dead) {
+            b.setBot(new dna.bot.Fighter())
         }
     })
 }
@@ -156,9 +174,17 @@ function calculateDiff() {
     }
 }
 
-function begin(station, queue) {
-    this.station = station
+function begin() {
+    log('fight!')
+    this.state = FIGHT
     this.timer = env.tune.roundTime
+    this.allFight()
+}
+
+function ready(station, queue) {
+    this.state = READY
+    this.station = station
+    this.timer = env.tune.readyTime
 
     // clear the scene
     markAllDead()
@@ -181,25 +207,45 @@ function begin(station, queue) {
     this.result = {
         start: this.calculateStat()
     }
-    lab.stat.show(this.result, env.tune.startStatTime)
+    lab.stat.show(this.result, env.tune.readyTime)
+}
+
+function finish() {
+    this.state = RESULT
+    this.timer = env.tune.finishStatTime - env.tune.fadeTime
+    this.calculateDiff()
+    this.allWait()
+
+    trap('finish', {
+        station: this.station,
+        result: this.result,
+    })
 }
 
 function evo(dt) {
     cleanUp()
-    if (env.state !== 'street') return
+    //if (env.state !== 'street') return
+
     this.timer -= dt
 
-    if (this.timer < 0) {
-        if (env.skip) {
-            this.timer = env.tune.roundTime
-        } else {
-            this.calculateDiff()
-            this.allWait()
+    switch(this.state) {
+    case READY:
+        if (this.timer <= 0) this.begin()
+        break;
 
-            trap('finish', {
-                station: this.station,
-                result: this.result,
-            })
+    case FIGHT:
+        if (this.timer <= 0) {
+            if (env.skip) this.timer = env.tune.roundTime
+            else this.finish()
         }
+        break;
+
+    case RESULT:
+        if (this.timer <= 0) {
+            this.state = FADE
+            lab.transition.transit(
+                env.tune.transitionTime, env.tune.fadeTime)
+        }
+        break;
     }
 }
