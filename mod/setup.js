@@ -1,4 +1,3 @@
-
 env.time = 0
 
 function adjust() {
