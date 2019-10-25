@@ -1,9 +1,10 @@
-// player set
-const NONE = 0
-const HUMAN = 1
-const AI = 2
+const type = {
+    NONE: 0,
+    BOT: 1,
+    KEYSET: 2,
+    GAMEPAD: 3,
+}
 
-// action set
 const actionSet = {
     LEFT: 1,
     RIGHT: 2,
@@ -18,44 +19,62 @@ const actionSet = {
 
 const src = []
 const bind = []
+const timeout = []
 
 let player = 0
 
 function init() {
+    augment(this, type)
     augment(this, actionSet)
+
+    for (let i = 0; i < env.tune.gangs + 1; i++) {
+        bind[i] = {
+            id: -1,
+            act: [],
+            lastUsed: Date.now(),
+        }
+        timeout[i] = env.tune.control.touchMinTimeout
+            + RND(env.tune.control.touchVarTimeout)
+    }
 }
 
-function isActive(player) {
+function isTouched(player) {
+    return bind[player] && bind[player].id >= 0
+}
+
+function isIdle(player) {
     const source = bind[player]
-    if (!source) return false
-    if (source.lastUsed + env.tune.control.activeTimeout
-            < Date.now()) {
-        return false
-    } else {
-        return true
-    }
+    return (source.lastUsed + timeout[player] < Date.now())
+}
+
+function getType(player) {
+    if (!isTouched(player)) return type.NONE
+    if (bind[player].id === 0) return type.BOT
+
+    const kshift = lab.control.mapping.KEYBOARD_ID_SHIFT
+    if (bind[player].id < kshift) return type.GAMEPAD
+    return type.KEYSET
 }
 
 function getAction(player, action) {
     const source = bind[player]
+    if (!source) return false
 
-    if (!source) {
-        // bind player and wait for AI to take control over
-        bind[player] = {
-            id: 0,
-            act: [],
-            lastUsed: Date.now(),
+    if (isIdle(player)) {
+        if (source.id === 0) {
+            return lab.control.AI.getAction(player, action)
+        } else {
+            // bot takes over
+            source.id = 0
         }
-        return false
-    }
-
-    if (!this.isActive(player)) {
-        source.bot = true
-        return lab.control.AI.getAction(player, action)
     } else {
-        source.bot = false
         return source.act[action]
     }
+}
+
+function ctrlType(ctrl) {
+    const kshift = lab.control.mapping.KEYBOARD_ID_SHIFT
+    return ctrl < kshift?  'gamepad' : 'keyset'
 }
 
 function touch(ctrl) {
@@ -64,20 +83,19 @@ function touch(ctrl) {
         player ++
         if (player > lab.gang.length) player = 1
 
-        src[ctrl] = {
-            id: ctrl,
-            bot: false,
-            act: [],
+        src[ctrl] = bind[player]
+        src[ctrl].id = ctrl
+
+        log('binding ' + ctrlType() + ' #' + ctrl
+            + ' to @' + player)
+    } else {
+        src[ctrl].lastUsed = Date.now()
+        if (src[ctrl].id !== ctrl) {
+            log('rebinding ' + ctrlType() + ' #' + ctrl
+                + ' to @' + player)
+            src[ctrl].id = ctrl
         }
-        bind[player] = src[ctrl]
-
-        const kshift = lab.control.mapping.KEYBOARD_ID_SHIFT
-        const type = ctrl < kshift?  'gamepad' : 'keyset'
-
-        log('binding ' + type + ' #' + ctrl + ' to ' + player)
     }
-    src[ctrl].bot = false
-    src[ctrl].lastUsed = Date.now()
 }
 
 function act(ctrl, action) {
@@ -86,6 +104,22 @@ function act(ctrl, action) {
 }
 
 function stop(ctrl, action) {
-    touch(ctrl)
     src[ctrl].act[action] = false
 }
+
+/*
+function draw() {
+    // debug control usage
+    font('24px coolville')
+    alignLeft()
+
+    let x = 20
+    let y = 20
+    bind.forEach(b => {
+        text('#' + b.id + ': '
+            + round(((Date.now() - b.lastUsed))/1000),
+            x, y)
+        y += 30
+    })
+}
+*/

@@ -7,6 +7,8 @@ function evo(dt){
 function gangStat(g, x, y) {
     let th = env.style.scoreSize * env.scale
 
+    const type = lab.control.player.getType(g.id)
+
     if (g.player && env.control.any(g.player)) {
         th *= env.style.selectedScoreScale
     }
@@ -18,7 +20,19 @@ function gangStat(g, x, y) {
     baseTop()
 
     const doers = lab.carriage.countDoers(g.id)
-    text(g.name + ': ' + (g.mobs-doers), x, y)
+    const label = g.name + ': ' + (g.mobs-doers)
+
+    if (type !== lab.control.player.type.NONE) {
+        const img = type === lab.control.player.type.BOT?
+                res.ui.cpu : res.ui.gamepad
+        const tw = ctx.measureText(label + ' ').width
+        const ih = th * 0.8
+        const iw = ih/img.height * img.width
+
+        image(img, x-tw/2-iw, y+(th-ih), iw, ih)
+    }
+
+    text(label, x, y)
 
     y += th
     text('$' + g.cash, x, y)
@@ -43,37 +57,6 @@ function streetStat() {
 
     return stat
 }
-
-/*
-function findWinner() {
-    const stat = streetStat()
-    let winner = 0
-    let val = 0
-
-    let second = 0
-    let sval = 0
-
-    for (let i = 0; i < stat.length; i++) {
-        if (stat[i] > val) {
-            winner = i
-            val = stat[i]
-        }
-        if (stat[i] < val && stat[i] > sval) {
-            second = i
-            sval = stat[i]
-        }
-    }
-
-    return {
-        id: winner,
-        gang: lab.gang[winner],
-        sum: val,
-        sid: second,
-        second: lab.gang[second],
-        secondSum: sval,
-    }
-}
-*/
 
 function showStreet() {
     const stat = lab.fight.calculateStat()

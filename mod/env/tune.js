@@ -49,6 +49,7 @@ const tune = {
     transitionTime: 2,
 
     control: {
-        activeTimeout: 30000, // in ms
+        touchMinTimeout: 90000, // in ms
+        touchVarTimeout: 30000,
     },
 }
