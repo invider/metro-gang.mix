@@ -158,9 +158,9 @@ function evo(dt) {
     cleanUp()
 
     for (let i = 1; i <= env.tune.gangs; i++) {
-        const c = env.control.player[i] || {}
 
-        if (c.punch || c.kick) {
+        const p = lab.control.player
+        if (p.getAction(i, p.PUNCH) || p.getAction(i, p.KICK)) {
             if (!flag[i]) {
                 flag[i] = true
                 const quitters = catchAllQuitters(i)

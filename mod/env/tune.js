@@ -47,4 +47,8 @@ const tune = {
     },
     fadeTime: 0.7,
     transitionTime: 2,
+
+    control: {
+        activeTimeout: 30000, // in ms
+    },
 }

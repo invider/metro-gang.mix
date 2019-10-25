@@ -30,7 +30,7 @@ Fighter.prototype.evo = function(dt) {
             this.action = RND(1, 10)
             this.timeout = rnd(1, 3)
         }
-        log(this.bro.name + ' from #' + this.bro.gang + ' new action: ' + this.action)
+        //log(this.bro.name + ' from #' + this.bro.gang + ' new action: ' + this.action)
 
     }
 }

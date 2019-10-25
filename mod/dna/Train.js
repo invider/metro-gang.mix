@@ -55,6 +55,7 @@ Train.prototype.onDeparture = function() {
 
     this.state = TRANSIT
     this.transit = 0
+    trap('departure')
 }
 
 Train.prototype.handle = function() {

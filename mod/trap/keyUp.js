@@ -24,6 +24,6 @@ function keyUp(e) {
     const p = lab.control.player
     const c = lab.control.mapping.keys[e.code]
     if (c) {
-        p.act(floor(c/100), c % 100)
+        p.stop(floor(c/100), c % 100)
     }
 }

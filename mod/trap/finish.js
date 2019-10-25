@@ -12,4 +12,6 @@ function finish(e) {
     })
 
     env.game.checkGameOver()
+
+    lab.control.AI.onFinish()
 }
