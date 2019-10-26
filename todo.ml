@@ -1,14 +1,11 @@
-> winner gang split
 > metro hints
 > blink on active controls or bot
 > blink on player damage
 > vibrate on player damage
 > stations moving bot
-> different sfx for each gang
 
 > parallax city scape background
 > fighting bot
-> rolling demo
 > skyline
 > passive income on captured stations?
 > riot police
@@ -27,6 +24,9 @@
 ? bro's get up animation
 ? bro's knocked down animation
 ----------------------------------
+V different sfx for each gang
+V rolling demo
+V winner gang split
 V catch control from AI
 V AI catch control from an idle player
 V dynamic gang -> controller binding in activate order (1,2,3,4)

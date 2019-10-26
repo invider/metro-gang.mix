@@ -255,6 +255,7 @@ Bro.prototype.perform = function(action, dt) {
     case JUMP:
         if (this.y !== 0) return false;
         this.dy = -this.h * env.tune.bro.jump
+        sfx(res.sfx.jump, .7)
         break;
 
     case PUNCH:
@@ -470,6 +471,7 @@ Bro.prototype.hit = function(hit) {
                 */
                 this.throwOutCash()
             }
+            sfx(res.sfx.punch, .5)
 
         } else {
             this.perform(DAMAGE, hit)

@@ -36,7 +36,7 @@ function evo(dt) {
                 }
             }
         } else if (p.getAction(f.owner.player, p.RIGHT)) {
-            if (splitActino != p.RIGHT) {
+            if (splitAction != p.RIGHT) {
                 splitAction = p.RIGHT
                 if (f.split > 1) {
                     f.split --

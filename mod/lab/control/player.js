@@ -122,38 +122,19 @@ function pretouch(ctrl) {
 
         log('binding ' + ctrlType() + ' #' + ctrl
             + ' to @' + player)
-    } else {
-        if (src[ctrl].id !== ctrl) {
-            log('rebinding ' + ctrlType() + ' #' + src[ctrl].id + ' -> #' + ctrl
-                + ' for @' + player)
-            src[ctrl].id = ctrl
-        }
     }
 }
 
 function touch(ctrl) {
     pretouch(ctrl)
+
     src[ctrl].lastUsed = Date.now()
-    /*
-    if (!src[ctrl]) {
-        // activate new controller
-        player ++
-        if (player > lab.gang.length) player = 1
 
-        src[ctrl] = bind[player]
+    if (src[ctrl].id !== ctrl) {
+        log('rebinding ' + ctrlType() + ' #' + src[ctrl].id + ' -> #' + ctrl
+            + ' for @' + player)
         src[ctrl].id = ctrl
-
-        log('binding ' + ctrlType() + ' #' + ctrl
-            + ' to @' + player)
-    } else {
-        src[ctrl].lastUsed = Date.now()
-        if (src[ctrl].id !== ctrl) {
-            log('rebinding ' + ctrlType() + ' #' + ctrl
-                + ' to @' + player)
-            src[ctrl].id = ctrl
-        }
     }
-    */
 }
 
 function act(ctrl, action) {
