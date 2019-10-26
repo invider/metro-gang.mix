@@ -1,7 +1,7 @@
 const df = {
     id: 0,
     cash: 0,
-    mobs: 5,
+    mobs: 1,
     player: 0,
 }
 

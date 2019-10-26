@@ -255,7 +255,7 @@ Bro.prototype.perform = function(action, dt) {
     case JUMP:
         if (this.y !== 0) return false;
         this.dy = -this.h * env.tune.bro.jump
-        sfx(res.sfx.jump, .7)
+        sfx(res.sfx.jump, .3)
         break;
 
     case PUNCH:

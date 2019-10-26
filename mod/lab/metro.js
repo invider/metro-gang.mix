@@ -60,6 +60,7 @@ function runTraffic() {
     buildLines()
     createTrains()
 
+    /*
     // populate bad hoods
     // hard-code-capture some stations
     lines[0].stations[1].gang = lab.gang[3]
@@ -81,6 +82,7 @@ function runTraffic() {
     //lab.gang[3].cash = 200
     //lab.gang[4].mobs = 15
     //lab.gang[4].cash = 400
+    */
 }
 
 function nextSegment(src, dest) {

@@ -220,8 +220,8 @@ function ready(station, queue) {
         // station gang
         queue[station.gang.id].mobs += station.mobs
         queue[station.gang.id].cash += RND(1, 2)
-        //queue[0].mobs += RND(0, 2)
-        //queue[0].cash += RND(1, 4)
+        queue[0].mobs += RND(0, 2)
+        queue[0].cash += RND(1, 4)
     }
 
     // spawn structure
