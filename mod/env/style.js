@@ -31,9 +31,9 @@ const style = {
 
     metro: {
         fontSize: 8,
-        lineWidth: 2,
-        stationW: 1.5,
-        stationR: 5,
+        lineWidth: 1.5,
+        stationW: 1,
+        stationR: 4,
         trainWidth: 0.02,
         trainHeight: 0.01,
 

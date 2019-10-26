@@ -173,8 +173,15 @@ function calculateDiff() {
     if (res.start.owner !== winner) {
         // new station owner!
         this.station.gang = winner
-        res.finish.owner = winner.id
+        res.finish.owner = winner
         res.diff.newOwner = winner.id
+    }
+
+    if (this.station.gang.id > 0) {
+        // we have a gang in control - need to leave someone behind
+        const totalWinners = res.finish.gang[this.station.gang.id].mobs
+        res.finish.split = floor(totalWinners/2)
+        this.station.mobs = res.finish.split
     }
 }
 
@@ -207,18 +214,14 @@ function ready(station, queue) {
     // add locals in queue
     if (!station.gang || station.gang.id === 0) {
         // citizens 
-        //spawnBros(lab.gang[0], 0, RND(1,4), RND(1, 8))
-        queue[0].mobs += RND(1, 4)
-        queue[0].cash += RND(1, 8)
+        queue[0].mobs += RND(1, 3)
+        queue[0].cash += RND(1, 6)
     } else {
         // station gang
-        //spawnBros(station.gang, 0, station.mobs, RND(1, 8))
-        //spawnBros(lab.gang[0], 0, RND(0,2), RND(1, 2))
         queue[station.gang.id].mobs += station.mobs
         queue[station.gang.id].cash += RND(1, 2)
-
-        queue[0].mobs += RND(0, 2)
-        queue[0].cash += RND(1, 4)
+        //queue[0].mobs += RND(0, 2)
+        //queue[0].cash += RND(1, 4)
     }
 
     // spawn structure

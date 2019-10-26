@@ -16,17 +16,47 @@ function hide() {
     if (this.onFinish) this.onFinish()
 }
 
+let splitAction = 0
 function evo(dt) {
     if (this.hidden) return
     this.time -= dt
 
     if (this.time < 0) this.hide()
+
+    // split
+    if (this.stat.finish && this.stat.finish.split) {
+        const p = lab.control.player
+        const f = this.stat.finish
+
+        if (p.getAction(f.owner.player, p.LEFT)) {
+            if (splitAction != p.LEFT) {
+                splitAction = p.LEFT
+                if (f.split < f.gang[f.owner.id].mobs - 1) {
+                    f.split ++
+                }
+            }
+        } else if (p.getAction(f.owner.player, p.RIGHT)) {
+            if (splitActino != p.RIGHT) {
+                splitAction = p.RIGHT
+                if (f.split > 1) {
+                    f.split --
+                }
+            }
+        } else {
+            splitAction = 0
+        }
+    }
 }
 
-function drawStation(y, station) {
+function drawStation(y, station, st) {
+    let mobs = station.mobs
+    if (st.split) {
+        mobs = '' + st.split + ':' + (st.gang[station.gang.id].mobs - st.split)
+    }
+
     fill(station.gang.color())
     if (station.gang.id > 0 && station.mobs > 0) {
-        text(station.name + ' - ' + station.mobs, rx(.5), y)
+        text(station.name + ' - ' + mobs, rx(.5), y)
     } else {
         text(station.name, rx(.5), y)
     }
@@ -61,7 +91,7 @@ function drawStat(st, diff, summary) {
     let y = ry(.2)
     let step = ry(.07)
 
-    drawStation(y, st.station)
+    drawStation(y, st.station, st)
 
     if (summary) {
         y += step

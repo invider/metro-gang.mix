@@ -8,6 +8,7 @@ function finish(e) {
     env.control.resetAll()
 
     lab.stat.show(res, env.tune.finishStatTime, () => {
+        trap('split', res)
         lab.fight.markAllDead()
         lab.metro.show()
     })

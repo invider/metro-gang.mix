@@ -58,6 +58,7 @@ function getType(player) {
 }
 
 function getAction(player, action) {
+    if (!player) return false
     const source = bind[player]
     if (!source) return false
 
@@ -123,8 +124,8 @@ function pretouch(ctrl) {
             + ' to @' + player)
     } else {
         if (src[ctrl].id !== ctrl) {
-            log('rebinding ' + ctrlType() + ' #' + ctrl
-                + ' to @' + player)
+            log('rebinding ' + ctrlType() + ' #' + src[ctrl].id + ' -> #' + ctrl
+                + ' for @' + player)
             src[ctrl].id = ctrl
         }
     }
