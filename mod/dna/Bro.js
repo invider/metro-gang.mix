@@ -73,6 +73,7 @@ const df = {
     recharge: 0,
     timer: 0,
     cash: 2,
+    player: 0,
 }
 
 let bros = 0
@@ -165,7 +166,7 @@ Bro.prototype.cashIn = function(val) {
     if (this.state === OUT) return false
 
     this.cash = roundCash(this.cash + val)
-    sfx(res.sfx.pickup, 0.6)
+    sfx(res.sfx.pickup[this.gang], 0.6)
     return true
 }
 
@@ -454,7 +455,8 @@ Bro.prototype.hit = function(hit) {
 
         if (this.state === OUT) {
             this.hitCount ++
-            if (this.hitCount >= env.tune.hitsToBro
+            if (!this.player
+                    && this.hitCount >= env.tune.hitsToBro
                     && this.cash === 0
                     && (this.x <= rx(env.tune.broCorner)
                         || this.x >= rx(1-env.tune.broCorner))) {
@@ -597,7 +599,7 @@ Bro.prototype.evo = function(dt) {
     if (!this.player) this.bot.evo(dt)
 
     let c = this.bot.control
-    if (this.player) c = env.control.player[this.player] || {}
+    if (this.player && lab.fight.isFight()) c = lab.control.player.getActions(this.player)
 
     if (c) {
         if (c.left) {
@@ -616,7 +618,7 @@ Bro.prototype.evo = function(dt) {
         if (c.block) this.perform(BLOCK)
         else if (this.state === BLOCK) this.idle()
 
-        if (c.jump) this.perform(JUMP, .3)
+        if (c.up) this.perform(JUMP, .3)
 
         if (c.kick || c.punch) {
             if (c.right || c.left) this.perform(DASH, dt)

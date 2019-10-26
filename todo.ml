@@ -1,15 +1,13 @@
-> apply fight results
-> fight results panel (station -> gang, reds +2, grapes -2)
+> winner gang split
 > metro hints
+> blink on active controls or bot
+> blink on player damage
+> vibrate on player damage
 > stations moving bot
 > different sfx for each gang
 
 > parallax city scape background
-> dynamic gang -> controller binding in activate order (1,2,3,4)
-> dynamic player -> bro binding on fights with proper Z ordering (put on top)
 > fighting bot
-> catch control from AI
-> AI catch control from an idle player
 > rolling demo
 > skyline
 > passive income on captured stations?
@@ -23,13 +21,18 @@
 > graffiti
 > hit and fall particle effects
 > action dust effects (for jumps, dashes, landings etc)
-> pack and test publish on itch.io
 > sfx for jumps, kicks and punches
 >>>
 ? bro's crouch
 ? bro's get up animation
 ? bro's knocked down animation
 ----------------------------------
+V catch control from AI
+V AI catch control from an idle player
+V dynamic gang -> controller binding in activate order (1,2,3,4)
+V dynamic player -> bro binding on fights with proper Z ordering (put on top)
+V apply fight results
+V fight results panel (station -> gang, reds +2, grapes -2)
 V fix stat error for negative transactions
 V neutrals
 V fight results structure (number by gangs, money by gangs)
@@ -57,3 +60,4 @@ V bro's on the knees animation
 V fix gang color
 V active boxes (feet, fist etc...)
 V hit areas (head, body)
+V pack and test publish on itch.io

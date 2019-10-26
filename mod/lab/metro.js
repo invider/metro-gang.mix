@@ -63,18 +63,18 @@ function runTraffic() {
     // populate bad hoods
     // hard-code-capture some stations
     lines[0].stations[1].gang = lab.gang[3]
-    lines[0].stations[1].mobs = 3
+    lines[0].stations[1].mobs = 2
     lines[0].stations[3].gang = lab.gang[3]
-    lines[0].stations[3].mobs = 2
+    lines[0].stations[3].mobs = 3
     lines[0].stations[8].gang = lab.gang[3]
-    lines[0].stations[8].mobs = 5
+    lines[0].stations[8].mobs = 3
 
     lines[0].stations[9].gang = lab.gang[4]
-    lines[0].stations[9].mobs = 15
+    lines[0].stations[9].mobs = 7
     lines[0].stations[10].gang = lab.gang[4]
-    lines[0].stations[10].mobs = 7
+    lines[0].stations[10].mobs = 5
     lines[0].stations[7].gang = lab.gang[4]
-    lines[0].stations[7].mobs = 5
+    lines[0].stations[7].mobs = 3
 
     // give them some cash and mobs
     //lab.gang[3].mobs = 10

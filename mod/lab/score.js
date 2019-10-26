@@ -9,7 +9,7 @@ function gangStat(g, x, y) {
 
     const type = lab.control.player.getType(g.id)
 
-    if (g.player && env.control.any(g.player)) {
+    if (g.player && lab.control.player.getFeedback(g.player)) {
         th *= env.style.selectedScoreScale
     }
 

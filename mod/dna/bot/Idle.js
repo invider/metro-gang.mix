@@ -6,7 +6,6 @@ sys.extend(Idle, Walker)
 
 Idle.prototype.init = function(bro) {
     Walker.prototype.init.call(this, bro)
-    bro.player = 0
 }
 
 Idle.prototype.evo = function(dt) {

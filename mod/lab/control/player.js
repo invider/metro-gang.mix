@@ -1,15 +1,15 @@
 const type = {
     NONE: 0,
-    BOT: 1,
-    KEYSET: 2,
-    GAMEPAD: 3,
+    BOT: -1,
+    KEYSET: 1,
+    GAMEPAD: 2,
 }
 
 const actionSet = {
-    LEFT: 1,
-    RIGHT: 2,
-    UP: 3,
-    DOWN: 4,
+    UP: 1,
+    LEFT: 2,
+    DOWN: 3,
+    RIGHT: 4,
     PUNCH: 5,
     KICK: 6,
     BLOCK: 7,
@@ -33,8 +33,7 @@ function init() {
             act: [],
             lastUsed: Date.now(),
         }
-        timeout[i] = env.tune.control.touchMinTimeout
-            + RND(env.tune.control.touchVarTimeout)
+        timeout[i] = RND(env.tune.control.touchVarTimeout)
     }
 }
 
@@ -44,7 +43,9 @@ function isTouched(player) {
 
 function isIdle(player) {
     const source = bind[player]
-    return (source.lastUsed + timeout[player] < Date.now())
+    const cfg = env.tune.control
+    if (source.id < 0) return source.lastUsed + cfg.startBotTimeout + timeout[player] < Date.now();
+    return source.lastUsed + cfg.touchMinTimeout + timeout[player] < Date.now();
 }
 
 function getType(player) {
@@ -57,6 +58,7 @@ function getType(player) {
 }
 
 function getAction(player, action) {
+    if (!player) return false
     const source = bind[player]
     if (!source) return false
 
@@ -72,12 +74,67 @@ function getAction(player, action) {
     }
 }
 
+function getActions(player) {
+    // TODO refactor bro to work with array?
+    const c = {}
+    const source = bind[player]
+    if (!source) return c
+    const a = source.act
+
+    c.left = a[this.LEFT]
+    c.right = a[this.RIGHT]
+    c.up = a[this.UP]
+    c.down = a[this.DOWN]
+    c.punch = a[this.PUNCH]
+    c.kick = a[this.KICK]
+    c.block = a[this.BLOCK]
+    c.cut = a[this.CUT]
+    return c
+}
+
+function getFeedback(player) {
+    const source = bind[player]
+    if (!source) return false
+
+    if (source.id > 0) {
+        let action = false
+        for (let i = 0; i < source.act.length; i++) {
+            if (source.act[i]) action = true
+        }
+        return action
+    }
+    return false
+}
+
 function ctrlType(ctrl) {
     const kshift = lab.control.mapping.KEYBOARD_ID_SHIFT
     return ctrl < kshift?  'gamepad' : 'keyset'
 }
 
+function pretouch(ctrl) {
+    if (!src[ctrl]) {
+        // activate new controller
+        player ++
+        if (player > env.tune.gangs) player = 1
+
+        src[ctrl] = bind[player]
+        src[ctrl].id = ctrl
+
+        log('binding ' + ctrlType() + ' #' + ctrl
+            + ' to @' + player)
+    } else {
+        if (src[ctrl].id !== ctrl) {
+            log('rebinding ' + ctrlType() + ' #' + src[ctrl].id + ' -> #' + ctrl
+                + ' for @' + player)
+            src[ctrl].id = ctrl
+        }
+    }
+}
+
 function touch(ctrl) {
+    pretouch(ctrl)
+    src[ctrl].lastUsed = Date.now()
+    /*
     if (!src[ctrl]) {
         // activate new controller
         player ++
@@ -96,6 +153,7 @@ function touch(ctrl) {
             src[ctrl].id = ctrl
         }
     }
+    */
 }
 
 function act(ctrl, action) {
@@ -104,6 +162,7 @@ function act(ctrl, action) {
 }
 
 function stop(ctrl, action) {
+    pretouch(ctrl)
     src[ctrl].act[action] = false
 }
 
