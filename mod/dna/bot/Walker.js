@@ -12,9 +12,11 @@ Walker.prototype.idle = function() {
     const c = this.control
     c.left = false
     c.right = false
-    c.jump = false
-    c.block = false
+    c.up = false
     c.punch = false
+    c.kick = false
+    c.cut = false
+    c.block = false
 }
 
 Walker.prototype.follow = function() {
@@ -27,9 +29,9 @@ Walker.prototype.follow = function() {
     case 3: c.right = true; break;
     case 4: c.down = true; break;
     case 5: c.punch = true; break;
-    case 6: c.jump = true; break;
-    case 7: c.jump = true; c.left = true; break;
-    case 8: c.jump = true; c.right = true; break;
+    case 6: c.up = true; break;
+    case 7: c.up = true; c.left = true; break;
+    case 8: c.up = true; c.right = true; break;
     case 9: c.punch= true; c.left = true; break;
     case 10: c.punch= true; c.right= true; break;
     }

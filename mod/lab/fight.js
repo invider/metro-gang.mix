@@ -9,6 +9,10 @@ function init() {
     this.state = HIDDEN
 }
 
+function isFight() {
+    return this.state === FIGHT
+}
+
 function markAllDead() {
     lab.street._ls.forEach(e => {
         e.dead = true
@@ -41,18 +45,11 @@ function spawnBro(igang) {
         cash: 2,
         bot: new dna.bot.Idle(),
     })
+    b.frame.cur = RND(1, 4)
 }
 
-function spawnBros(gang, dir, n, totalCash) {
+function spawnBros(gang, baseX, spread, n, totalCash, ctrl) {
     if (!n) return
-
-    let sh = 0
-    let sx = rx(.4)
-
-    if (dir === 0) {
-        sh = rx(.6)
-        sx = rx(.6)
-    }
 
     const cash = lib.util.normalizeCash(totalCash/n)
 
@@ -73,12 +70,19 @@ function spawnBros(gang, dir, n, totalCash) {
 
     for (let i = 0; i < n; i++) {
         // other bots
+        const d = RND(1)
+        const x = limit(baseX + (RND(spread) - spread/2), rx(.1), rx(.9))
+        const p = (i === 0 && ctrl)? gang.player : 0
+        const Z = (i === 0 && ctrl)? RND(200, 299) : RND(100, 199)
+
+
         const b = lab.street.spawn('Bro', {
-            Z: RND(100, 199),
+            Z: Z,
             gang: gang.id,
-            x: sh + rnd(rx(.2)),
+            player: p,
+            x: x,
             y: 0,
-            dir: dir,
+            dir: d,
             cash: cash,
             bot: new dna.bot.Idle(),
         })
@@ -181,6 +185,17 @@ function begin() {
     this.allFight()
 }
 
+function shuffle(list) {
+    for (let i = 0; i < list.length; i++) {
+        const s = RND(list.length-1)
+        const t = RND(list.length-1)
+        const sObj = list[s]
+        const tObj = list[t]
+        list[s] = tObj
+        list[t] = sObj
+    }
+}
+
 function ready(station, queue) {
     this.state = READY
     this.station = station
@@ -189,20 +204,45 @@ function ready(station, queue) {
     // clear the scene
     markAllDead()
 
+    // add locals in queue
     if (!station.gang || station.gang.id === 0) {
         // citizens 
-        spawnBros(lab.gang[0], 0, RND(1,4), RND(1, 8))
+        //spawnBros(lab.gang[0], 0, RND(1,4), RND(1, 8))
+        queue[0].mobs += RND(1, 4)
+        queue[0].cash += RND(1, 8)
     } else {
         // station gang
-        spawnBros(station.gang, 0, station.mobs, RND(1, 8))
+        //spawnBros(station.gang, 0, station.mobs, RND(1, 8))
+        //spawnBros(lab.gang[0], 0, RND(0,2), RND(1, 2))
+        queue[station.gang.id].mobs += station.mobs
+        queue[station.gang.id].cash += RND(1, 2)
 
-        spawnBros(lab.gang[0], 0, RND(0,2), RND(1, 2))
+        queue[0].mobs += RND(0, 2)
+        queue[0].cash += RND(1, 4)
     }
 
-    // arrival gangs
-    for (let i = 1; i < queue.length; i++) {
-        spawnBros(lab.gang[i], 1, queue[i].mobs, queue[i].cash)
-    }
+    // spawn structure
+    const locGang = []
+    queue.forEach((e, i) => {
+        if (e.mobs > 0) {
+            e.id = i
+            e.ctrl = lab.control.player.getType(i) > 0
+            locGang.push(e)
+        }
+    })
+    shuffle(locGang)
+
+    let x = rx(.2)
+    let step = rx(.8) / locGang.length
+    let spread = rx(.4) / (locGang.length*.7)
+    locGang.forEach(g => {
+        g.baseX = x
+        x += step
+    })
+
+    locGang.forEach(g => {
+        spawnBros(lab.gang[g.id], g.baseX, spread, g.mobs, g.cash, g.ctrl)
+    })
 
     this.result = {
         start: this.calculateStat()
@@ -224,7 +264,6 @@ function finish() {
 
 function evo(dt) {
     cleanUp()
-    //if (env.state !== 'street') return
 
     this.timer -= dt
 

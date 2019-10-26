@@ -12,7 +12,6 @@ function Gang(st) {
 
 Gang.prototype.cashIn = function(cash) {
     if (!cash) return
-    log('#' + this.id + ' cash: ' + cash)
     this.cash = max(this.cash + cash, 0)
 }
 
