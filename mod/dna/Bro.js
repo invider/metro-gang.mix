@@ -9,7 +9,10 @@ const JUMP = 5
 const DAMAGE = 6
 const OUT = 7
 const BREAK = 8
+const EXIT = 9
+const NOPE = 10
 
+// states debug mapping
 const states = [
     'idle',
     'run',
@@ -20,11 +23,13 @@ const states = [
     'damage',
     'out',
     'break',
+    'exit',
+    'nope',
 ]
 
 const cycles = [
-    [1, 4, 0.2],    // idle
-    [5, 12, 0.1],   // run
+    [1,  4,  0.15],  // idle
+    [5,  12, 0.1],  // run
     [19, 19, -1],   // block
     [15, 18, 0.1],  // punch
     [14, 14, -1],   // dash
@@ -32,6 +37,8 @@ const cycles = [
     [24, 24, -1],   // damage
     [20, 23, 0.25], // out
     [12, 12, -1],   // break
+    [25, 28, 0.15],  // exit
+    [1,  4,  0.15],  // nope
 ]
 
 const HEAD = 0
@@ -48,8 +55,10 @@ const area = [
 ]
 
 const df = {
+    Z: 100,
     _hittable: true,
     bro: true,
+    bounded: true,
     x: 0,
     y: 0,
     dx: 0,
@@ -69,13 +78,24 @@ const df = {
 let bros = 0
 function Bro(st) {
     this.name = 'bro' + ++bros
+    this.frame = {}
+    this.heal = env.tune.bro.healRate
+
     augment(this, df)
     augment(this, st)
-    this.heal = env.tune.bro.healRate
-    this.frame = {}
-    this.bot = {
-        control: {}
+
+    if (this.bot) this.setBot(this.bot)
+    else {
+        this.bot = {
+            control: {},
+            evo: function() {},
+        }
     }
+}
+
+Bro.prototype.setBot = function(bot) {
+    this.bot = bot
+    this.bot.init(this)
 }
 
 Bro.prototype.tuneToScale = function(s) {
@@ -121,8 +141,6 @@ Bro.prototype.getPoint = function(n) {
     return [ a[0] + a[2]/2, a[1] + a[3]/2 ]
 }
 
-
-
 Bro.prototype.setCycle = function(n) {
     if (this.frame.cycle === n) return
     const c = cycles[n]
@@ -144,8 +162,11 @@ function roundCash(v) {
 }
 
 Bro.prototype.cashIn = function(val) {
+    if (this.state === OUT) return false
+
     this.cash = roundCash(this.cash + val)
     sfx(res.sfx.pickup, 0.6)
+    return true
 }
 
 Bro.prototype.cashOut = function(val) {
@@ -158,6 +179,33 @@ Bro.prototype.throwOutCash = function() {
         x: this.x,
         y: this.y,
     })
+}
+
+Bro.prototype.closestEnemy = function() {
+    let enemy
+    const bro = this
+
+    if (this.dir === 0) {
+        lab.street._ls.forEach(b => {
+            if (b.bro && !b.dead && b.x < bro.x) {
+                if (!enemy) enemy = b
+                else if (b.x > enemy.x) enemy = b
+            }
+        })
+    } else {
+        lab.street._ls.forEach(b => {
+            if (b.bro && !b.dead && b.x > bro.x) {
+                if (!enemy) enemy = b
+                else if (b.x < enemy.x) enemy = b
+            }
+        })
+    }
+    return enemy
+}
+
+Bro.prototype.dist = function(b) {
+    if (!b || !b.bro || b.dead) return -1
+    return abs(this.x - b.x)
 }
 
 Bro.prototype.perform = function(action, dt) {
@@ -235,6 +283,11 @@ Bro.prototype.perform = function(action, dt) {
         }
     }
 
+    /*
+    if (this.state !== action) {
+        log(this.name + ' new state: ' + states[action])
+    }
+    */
     this.state = action
     this.setCycle(action)
     return true
@@ -469,7 +522,7 @@ Bro.prototype.evo = function(dt) {
     */
     //this.status = states[this.state] + ' ' + round(this.timer*100)/100
 
-    // animage
+    // animate
     this.frame.time += dt
     if (this.frame.delay > 0 && this.frame.time >= this.frame.delay) {
         this.frame.time = 0
@@ -478,7 +531,19 @@ Bro.prototype.evo = function(dt) {
     }
 
     // vector movement
+    const enemy = this.closestEnemy()
+    const enemyDist = this.dist(enemy)
+
+    /*
+    if (this.bounded && this.y === 0 && enemy && enemy.y === 0
+            && enemyDist >= 0 && enemyDist <= this.w/3) {
+        // skip
+    } else {
     this.x += this.dx * dt
+    }
+    */
+    this.x += this.dx * dt
+
     this.y += this.dy * dt
     if (this.y > 0) {
         this.y = 0
@@ -509,17 +574,19 @@ Bro.prototype.evo = function(dt) {
     }
 
     // bounds
-    if (this.x < env.tune.streetFence * env.base) {
-        // left edge
-        this.x = env.tune.streetFence * env.base
-        this.dx = 0
+    if (this.bounded) {
+        if (this.x < this.__.x1) {
+            // left edge
+            this.x = this.__.x1
+            this.dx = 0
 
-    } else if (this.x > width() - env.tune.streetFence * env.base) {
-        // right edge
-        this.x = width() - env.tune.streetFence * env.base
-        this.dx = 0
+        } else if (this.x > this.__.x2){
+            // right edge
+            this.x = this.__.x2 
+            this.dx = 0
+        }
+        this.y = limit(this.y, -height(), 0)
     }
-    this.y = limit(this.y, -height(), 0)
 
     // restore hits
     if (this.state !== OUT || this.recharge < 0) {
@@ -527,6 +594,8 @@ Bro.prototype.evo = function(dt) {
     }
 
     // control
+    if (!this.player) this.bot.evo(dt)
+
     let c = this.bot.control
     if (this.player) c = env.control.player[this.player] || {}
 
@@ -560,6 +629,7 @@ Bro.prototype.evo = function(dt) {
         }
     } 
 
+    /*
     if (!this.player) {
         // TODO bot logic
         // figure out closest targets
@@ -570,14 +640,18 @@ Bro.prototype.evo = function(dt) {
             if (this.gang) {
                 // gang member actions
                 this.bot.goal = RND(11)
+
+                if (this.x < rx(.1) && this.dir === 0) {
+                    this.bot.goal = 2
+                } else if (this.x > rx(.9) && this.dir === 1) {
+                    this.bot.goal = 1
+                }
             } else {
                 this.bot.goal = RND(4)
             }
             this.bot.timer = rnd(0.3, 2)
-            /*
-            log(this.name + ' selected #'
-                + this.bot.goal + ' for ' + this.bot.timer)
-                */
+            //log(this.name + ' selected #'
+            //    + this.bot.goal + ' for ' + this.bot.timer)
         } else {
             this.bot.timer -= dt
             if (this.bot.timer < 0) {
@@ -605,6 +679,7 @@ Bro.prototype.evo = function(dt) {
             }
         }
     }
+    */
 }
 
 Bro.prototype.showBound = function(b, color) {
@@ -622,21 +697,34 @@ Bro.prototype.draw = function() {
     // screen coordinates
     const x = this.x - this.w/2
     const y = this.y - this.h 
-    const f = res.gang[this.gang][this.frame.cur]
     const s = this.scale
+    let f
+    if (this.player) f = res.player[this.gang][this.frame.cur]
+    else f = res.gang[this.gang][this.frame.cur]
+    const shaddow = res.shaddow[this.frame.cur]
 
     save()
     translate(x, y)
 
     blocky()
+
+    const z = limit(1 - (this.Z - 100)/100, 0, 1) * .5
+    const zShift = z * 20
+
     if (this.dir === 0) {
         save()
         translate(f.width*s + 2*s, 0)
         scale(-1, 1)
-        image(f, 0, 0, f.width*s, f.height*s)
+        image(f, 0, -zShift, f.width*s, f.height*s)
+        alpha(z)
+        image(shaddow, 0, -zShift, f.width*s, f.height*s)
         restore()
     } else {
-        image(f, 0, 0, f.width*s, f.height*s)
+        save()
+        image(f, 0, -zShift, f.width*s, f.height*s)
+        alpha(z)
+        image(shaddow, 0, -zShift, f.width*s, f.height*s)
+        restore()
     }
 
     if (env.config.debug && this.status) {

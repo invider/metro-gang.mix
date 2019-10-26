@@ -1,4 +1,3 @@
-
 env.time = 0
 
 function adjust() {
@@ -12,7 +11,17 @@ function setup() {
     adjust()
     lib.util.remapSprites()
 
-    const cam = lab.spawn('SlideCamera', {
+    lab.spawn('SlideCamera', {
+        name: 'train',
+        Z: 22,
+        x: 0,
+        y: -ry(env.style.metro.floorRY),
+        scale: 1.5,
+        x1: -rx(.22),
+        x2: rx(.22),
+    })
+
+    lab.spawn('SlideCamera', {
         name: 'street',
         Z: 11,
         x: 0,

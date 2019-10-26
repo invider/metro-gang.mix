@@ -7,26 +7,45 @@ function evo(dt){
 function gangStat(g, x, y) {
     let th = env.style.scoreSize * env.scale
 
+    const type = lab.control.player.getType(g.id)
+
     if (g.player && env.control.any(g.player)) {
         th *= env.style.selectedScoreScale
     }
 
     fill(g.color())
-    font(th + 'px boo-city')
+    font(th + 'px ' + env.style.font)
 
     alignCenter()
     baseTop()
-    text('mobs: ' + g.mobs, x, y)
+
+    const doers = lab.carriage.countDoers(g.id)
+    const label = g.name + ': ' + (g.mobs-doers)
+
+    if (type !== lab.control.player.type.NONE) {
+        const img = type === lab.control.player.type.BOT?
+                res.ui.cpu : res.ui.gamepad
+        const tw = ctx.measureText(label + ' ').width
+        const ih = th * 0.8
+        const iw = ih/img.height * img.width
+
+        image(img, x-tw/2-iw, y+(th-ih), iw, ih)
+    }
+
+    text(label, x, y)
 
     y += th
     text('$' + g.cash, x, y)
 }
 
 function showMetro() {
-    gangStat(lab.gang[1], rx(0.2), ry(0.01))
-    gangStat(lab.gang[2], rx(0.4), ry(0.01))
-    gangStat(lab.gang[3], rx(0.6), ry(0.01))
-    gangStat(lab.gang[4], rx(0.8), ry(0.01))
+    let x = rx(.2)
+    let step = rx(.2)
+
+    for (let i = 1; i < lab.gang.length; i++) {
+        gangStat(lab.gang[i], x, ry(0.01))
+        x += step
+    }
 }
 
 function streetStat() {
@@ -39,51 +58,27 @@ function streetStat() {
     return stat
 }
 
-function findWinner() {
-    const stat = streetStat()
-    let winner = 0
-    let val = 0
-
-    let second = 0
-    let sval = 0
-
-    for (let i = 0; i < stat.length; i++) {
-        if (stat[i] > val) {
-            winner = i
-            val = stat[i]
-        }
-        if (stat[i] < val && stat[i] > sval) {
-            second = i
-            sval = stat[i]
-        }
-    }
-
-    return {
-        id: winner,
-        gang: lab.gang[winner],
-        sum: val,
-        sid: second,
-        second: lab.gang[second],
-        secondSum: sval,
-    }
-}
-
 function showStreet() {
-    const winner = findWinner()
+    const stat = lab.fight.calculateStat()
+    const winner = lab.gang[stat.score[0].id]
+    const ahead = lib.util.normalizeCash(stat.score[0].cash
+        - stat.score[1].cash)
 
     let th = env.style.timerSize * env.scale
-    font(th + 'px boo-city')
+    font(th + 'px ' + env.style.font)
 
     let y = ry(.01)
-    fill(winner.gang.color())
+    fill(winner.color())
     alignCenter()
     baseTop()
     text('' + ceil(lab.fight.timer), rx(.5), y)
 
-    //th = env.style.scoreSize * env.scale
-    font(th*0.7 + 'px boo-city')
-    y =+ th
-    text('+$' + floor((winner.sum-winner.secondSum) * 100)/100, rx(.5), y)
+    if (ahead > 0) {
+        //th = env.style.scoreSize * env.scale
+        font(th*0.7 + 'px ' + env.style.font)
+        y =+ th
+        text('+$' + ahead, rx(.5), y)
+    }
 }
 
 function draw() {

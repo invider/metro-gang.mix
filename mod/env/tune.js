@@ -1,5 +1,8 @@
 const tune = {
+    gangs: 4,
+    readyTime: 5,
     roundTime: 30,
+    finishStatTime: 6,
     cashUnit: 0.25,
     base: .08, // base=[bro width] relative to the screen width
     gravity: 18,
@@ -30,10 +33,23 @@ const tune = {
         hitBlock: 0.0025,   // force/hits in block
         playerOutTime: 2,
         botOutTime: 4,
+        takeInTime: 0.6,
     },
     metro: {
-        transitTime: 3,
-        hopOutThreshold: 0.9,
+        blink: .33,
+        transitTime: 10,
+        doorsMoveTime: 0.7,
+        exitWaiting: 1,
+        stationWaiting: 4,
+        fadeWaiting: 1,
+        hopOutThreshold: 0.95, // screen area for exit
         blockAfterFight: .5,
+    },
+    fadeTime: 0.7,
+    transitionTime: 2,
+
+    control: {
+        touchMinTimeout: 90000, // in ms
+        touchVarTimeout: 30000,
     },
 }

@@ -1,13 +1,23 @@
+> apply fight results
+> fight results panel (station -> gang, reds +2, grapes -2)
+> metro hints
 > stations moving bot
-> bot attitude (fight, run, pay out money, join the gang)
-> kick out of the street mechanics
-> bro's dialogs
+> different sfx for each gang
+
+> parallax city scape background
+> dynamic gang -> controller binding in activate order (1,2,3,4)
+> dynamic player -> bro binding on fights with proper Z ordering (put on top)
+> fighting bot
 > catch control from AI
-> recapture of idle player by AI
-> neutrals
-> riot police
-> passive income on captured stations
+> AI catch control from an idle player
+> rolling demo
 > skyline
+> passive income on captured stations?
+> riot police
+
+> bot attitude (fight, run, pay out money, join the gang)
+> bro's dialogs
+> recapture of idle player by AI
 > close-up buildings
 > close-up walls and fences
 > graffiti
@@ -16,11 +26,17 @@
 > pack and test publish on itch.io
 > sfx for jumps, kicks and punches
 >>>
-? gamepad support
 ? bro's crouch
 ? bro's get up animation
 ? bro's knocked down animation
 ----------------------------------
+V fix stat error for negative transactions
+V neutrals
+V fight results structure (number by gangs, money by gangs)
+V stat screen
+V subway train with movement in windows
+X kick out of the street mechanics
+V gamepad support
 V status panel
 V back to metro mechanics
 V metro map

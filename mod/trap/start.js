@@ -1,23 +1,39 @@
 function createGangs() {
     lab.gang = []
 
-    lab.gang.push(new dna.Gang({ id: 0 }))
-    lab.gang.push(new dna.Gang({ id: 1, player: 1 }))
-    lab.gang.push(new dna.Gang({ id: 2, player: 2 }))
-    lab.gang.push(new dna.Gang({ id: 3, player: 3 }))
-    lab.gang.push(new dna.Gang({ id: 4, player: 4 }))
+    lab.gang.push(new dna.Gang({
+        id: 0,
+        name: 'Citizens',
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 1,
+        name: 'Reds',
+        player: 1,
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 2,
+        name: 'Lemons',
+        player: 2,
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 3,
+        name: 'Limes',
+        player: 3,
+    }))
+
+    lab.gang.push(new dna.Gang({
+        id: 4,
+        name: 'Grapes',
+        player: 4,
+    }))
 }
 
-function start() {
-    createGangs()
-    lab.metro.runTraffic()
-    lab.metro.show()
-
-    bros()
-}
-
-function bros() {
+function demoBrawl() {
     lab.street.spawn('Bro', {
+        Z: 100,
         //player: 1,
         gang: 1,
         x: rx(.5),
@@ -26,6 +42,7 @@ function bros() {
     })
 
     lab.street.spawn('Bro', {
+        Z: 199,
         //player: 2,
         gang: 2,
         x: width() * .3,
@@ -33,19 +50,33 @@ function bros() {
     })
 
     lab.street.spawn('Bro', {
+        Z: 130,
         gang: 3,
         x: rx(.6),
         y: 0,
     })
     lab.street.spawn('Bro', {
+        Z: 160,
         gang: 4,
         x: rx(.7),
         y: 0,
         dir: 0,
     })
     lab.street.spawn('Bro', {
+        Z: 180,
         gang: 0,
         x: rx(.5),
         y: 0,
     })
 }
+
+function start() {
+    env.tagline = env.msg.title
+
+    createGangs()
+    lab.metro.runTraffic()
+    lab.metro.show()
+
+    //demoBrawl()
+}
+

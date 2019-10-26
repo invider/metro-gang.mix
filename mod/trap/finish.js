@@ -1,28 +1,17 @@
 function finish(e) {
+    env.state = 'stat'
     const station = e.station
-    const gang = e.gang
-
-    log('fight is finished at ' + station.name)
+    const res = e.result
+    console.dir(res)
 
     env.control.resetAll()
 
-    const winner = lab.score.findWinner()
-    console.dir(winner)
+    lab.stat.show(res, env.tune.finishStatTime, () => {
+        lab.fight.markAllDead()
+        lab.metro.show()
+    })
 
-    if (!station.gang || winner.gang.id !== station.gang.id) {
-        // transfer control!
-        log('gang ' + gang.name + ' captured the station!')
+    env.game.checkGameOver()
 
-        const gangColor = winner.gang.color()
-        lab.title.show('gang ' + gang.id
-            + ' captured ' + e.station.name, 3, gangColor)
-
-        station.gang = winner.gang
-        station.mobs = RND(1, 4)
-
-        winner.gang.cashIn(winner.sum)
-        winner.gang.mobs ++
-    }
-
-    lab.metro.show()
+    lab.control.AI.onFinish()
 }

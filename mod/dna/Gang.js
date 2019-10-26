@@ -5,16 +5,20 @@ const df = {
     player: 0,
 }
 
-let instances = 0
 function Gang(st) {
-    this.name = 'gang' + instances++
     augment(this, df)
     augment(this, st)
 }
 
 Gang.prototype.cashIn = function(cash) {
     if (!cash) return
-    this.cash += cash
+    log('#' + this.id + ' cash: ' + cash)
+    this.cash = max(this.cash + cash, 0)
+}
+
+Gang.prototype.mobIn = function(mobs) {
+    if (!mobs) return
+    this.mobs += max(mobs, 1)
 }
 
 Gang.prototype.color = function() {
@@ -33,4 +37,12 @@ Gang.prototype.control = function(df) {
     } else {
         return df
     }
+}
+
+Gang.prototype.numberOnStreet = function() {
+    let count = 0
+    lab.street._ls.forEach(e => {
+        if (!e.dead && e.gang === this.id) count++
+    })
+    return count
 }

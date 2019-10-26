@@ -1,4 +1,4 @@
-const Z = 21
+const Z = 23
 const W = 100
 
 let style
@@ -35,6 +35,7 @@ function buildLines() {
             lines[l].stations.push(s)
             s.sid = lines[l].stations.length - 1
             s.mobs = 0
+            s.gang = lab.gang[0]
         }
     })
 }
@@ -43,12 +44,15 @@ function getStation(l, s) {
     return lines[l].seg[s]
 }
 
+function forEachStation(fn) {
+    lines.forEach(l => l.stations.forEach(s => fn(s)))
+}
+
 function createTrains() {
     const l = lines[0]
-    trains.push(new dna.Train(0, l.seg[0], l.seg[1], lab.gang[1]))
-    trains.push(new dna.Train(0, l.seg[10], l.seg[9], lab.gang[2]))
-    trains.push(new dna.Train(0, l.seg[6], l.seg[5], lab.gang[3]))
-    trains.push(new dna.Train(0, l.seg[3], l.seg[4], lab.gang[4]))
+    const train = new dna.Train(0, l.seg[0], l.seg[1])
+    trains.push(train)
+    train.attachSubway(lab.subway)
 }
 
 function runTraffic() {
@@ -72,10 +76,11 @@ function runTraffic() {
     lines[0].stations[7].gang = lab.gang[4]
     lines[0].stations[7].mobs = 5
 
-    lab.gang[3].mobs = 10
-    lab.gang[3].cash = 200
-    lab.gang[4].mobs = 15
-    lab.gang[4].cash = 400
+    // give them some cash and mobs
+    //lab.gang[3].mobs = 10
+    //lab.gang[3].cash = 200
+    //lab.gang[4].mobs = 15
+    //lab.gang[4].cash = 400
 }
 
 function nextSegment(src, dest) {
@@ -142,13 +147,18 @@ function drawStations() {
                 gangColor = env.style.gang[0]
             }
 
-            stroke(gangColor)
             const r = style.stationR * env.scale
+            //fill(gangColor)
+            //fill(.75, .1, .4)
+            //fill(color)
+            //circle(x, y, r)
+
+            stroke(gangColor)
             lineWidth(style.stationW * env.scale)
             circle(x, y, r)
 
             fill(gangColor)
-            font(style.fontSize*env.scale + 'px boo-city')
+            font(style.fontSize*env.scale + 'px ' + env.style.font)
 
             const R = r * 1.5
             let sx = 0
@@ -186,15 +196,15 @@ function drawLogo() {
     alignCenter()
 
     fill(env.style.logoColor)
-    font(env.style.logoSize*env.scale + 'px boo-city')
-    text(env.style.logo, rx(.5), ry(.25))
+    font(env.style.logoSize*env.scale + 'px ' + env.style.font)
+    text(env.tagline, rx(.5), ry(.25))
 }
 
 function draw() {
     save()
     drawLines()
-    drawStations()
     drawTrains()
+    drawStations()
     drawLogo()
     restore()
 }
@@ -202,12 +212,16 @@ function draw() {
 function hide() {
     this.paused = true
     this.hidden = true
+    lab.subway.hidden = true
+    lab.carriage.paused = true
     env.state = 'street'
 }
 
 function show() {
     this.paused = false
     this.hidden = false
+    lab.subway.hidden = false
+    lab.carriage.paused = false
     env.state = 'metro'
     this.block = env.tune.metro.blockAfterFight
 }
