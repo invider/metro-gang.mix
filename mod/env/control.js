@@ -1,4 +1,5 @@
 const control = {
+    /*
     player: [],
 
     move: function(player, action) {
@@ -51,5 +52,5 @@ const control = {
             this.reset(i)
         }
     },
-
+    */
 }

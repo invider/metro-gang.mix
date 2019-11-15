@@ -120,7 +120,7 @@ function pretouch(ctrl) {
         src[ctrl] = bind[player]
         src[ctrl].id = ctrl
 
-        log('binding ' + ctrlType() + ' #' + ctrl
+        log('binding ' + ctrlType(ctrl) + ' #' + ctrl
             + ' to @' + player)
     }
 }
@@ -143,8 +143,9 @@ function act(ctrl, action) {
 }
 
 function stop(ctrl, action) {
-    pretouch(ctrl)
-    src[ctrl].act[action] = false
+    if (src[ctrl]) {
+        src[ctrl].act[action] = false
+    }
 }
 
 /*

@@ -59,7 +59,7 @@ function evo(dt) {
             p.stop(id, p.UP)
         }
 
-        // TODO refactor on custom mapping scheme (like keybaord)
+        // TODO refactor on custom mapping scheme (like the keyboard)
         if (d.buttons[0] && d.buttons[0].pressed) {
             activate(id)
             p.act(id, p.KICK)

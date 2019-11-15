@@ -5,7 +5,7 @@ function finish(e) {
 
     if (env.config.debug) console.dir(res)
 
-    env.control.resetAll()
+    //env.control.resetAll()
 
     lab.stat.show(res, env.tune.finishStatTime, () => {
         trap('split', res)

@@ -186,7 +186,6 @@ function calculateDiff() {
 }
 
 function begin() {
-    log('fight!')
     this.state = FIGHT
     this.timer = env.tune.roundTime
     this.allFight()

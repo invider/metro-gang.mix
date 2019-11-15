@@ -1,15 +1,14 @@
 name,x,y,label,note
 
 # yellow line
-Union Station,  5,  15 ,2
+Teremki,  5,  15 ,2
 Nivki,          9,  23, 2
-Pigalle,        13, 31, 2
-Anvers,         17, 39, 2
+Shuliavka,      17, 39, 2
+Vydubychi,      13, 31, 2
 Cashwood,       21, 47 
-Mall,           40, 47 
+Priorka,        40, 47 
 Downtown,       50, 40, 6
 Hydropark,      60, 40 
 Bridge,         70, 40, 5
 DVRZ,           80, 30, 6
 Troya,          90, 20, 6
-
