@@ -58,7 +58,7 @@ function spawnLight() {
     }
 
     light.dead = false
-    light.x = width()
+    light.x = rx(1)
     light.y = y
     light.r = env.style.metro.lightsSize * env.scale
 }
@@ -119,12 +119,12 @@ function draw() {
     const by = ry(baseY)
     const y = ry(baseY) - h
     fill(env.style.metro.floorColor)
-    rect(0, by, width(), height()-by)
+    rect(0, by, rx(1), ry(1)-by)
 
     // doors
     let x = -w*.95
 
-    while(x < width()) {
+    while(x < rx(1)) {
         const drw = res.subwayDoorLeft.width * env.scale
         const drh = res.subwayDoorLeft.height * env.scale
         const doorY = ry(baseY) - drh
@@ -138,7 +138,7 @@ function draw() {
 
     // carriage
     x = -w*.95
-    while(x < width()) {
+    while(x < rx(1)) {
         image(res.subway, x, ry(.9) - h, w, h)
         x += w
     }

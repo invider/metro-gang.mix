@@ -45,7 +45,7 @@ function demoBrawl() {
         Z: 199,
         //player: 2,
         gang: 2,
-        x: width() * .3,
+        x: rx(1) * .3,
         y: 0,
     })
 

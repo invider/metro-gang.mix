@@ -15,7 +15,7 @@ const selection = {
 
     area: function(inProgress) {
         if (!inProgress && this.state !== SELECTED) {
-            return [0, 0, width(), height()]
+            return [0, 0, rx(1), ry(1)]
         }
 
         const area = []

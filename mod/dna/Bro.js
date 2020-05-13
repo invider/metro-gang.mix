@@ -585,7 +585,7 @@ Bro.prototype.evo = function(dt) {
             this.x = this.__.x2 
             this.dx = 0
         }
-        this.y = limit(this.y, -height(), 0)
+        this.y = limit(this.y, -ry(1), 0)
     }
 
     // restore hits
@@ -760,7 +760,7 @@ Bro.prototype.draw = function() {
 
     // hits bar
     const h = min(this.hits/this.maxHits, 1)
-    const hy = lab.street.worldY(height() - 10 - 8*this.gang)
+    const hy = lab.street.worldY(ry(1) - 10 - 8*this.gang)
     const hw = this.w * env.style.healthWidth
     const hx = (x + this.w/2) - hw/2
 
