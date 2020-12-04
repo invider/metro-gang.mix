@@ -32,16 +32,16 @@ node_modules/
 # Win
 *.db
 
-# output packages
+# collider 
+.meta.cache
+out*
+web*
+dist*
 *.zip
 *.tar
 *.tgz
 *.tar.gz
 
-# output
-out*
-web*
-dist*
 
 # collider.jam local configs and scripts
 units.json
